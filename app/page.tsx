@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ExperienceList from "./experiences";
+import NameAnimation from "./name-animation";
 
 export default function Home() {
   return (
@@ -12,14 +13,14 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <Image
-            className="dark:invert"
+            className="dark:invert sm:w-4 sm:h-4"
             aria-hidden
             src="/youtube.svg"
             alt="Youtube icon"
-            width={16}
-            height={16}
+            width={20}
+            height={20}
           />
-          Youtube
+          <span className="hidden sm:block">Youtube</span>
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
@@ -28,14 +29,14 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <Image
-            className="dark:invert"
+            className="dark:invert sm:w-4 sm:h-4"
             aria-hidden
             src="/instagram.svg"
             alt="Instagram icon"
-            width={16}
-            height={16}
+            width={20}
+            height={20}
           />
-          Instagram
+          <span className="hidden sm:block">Instagram</span>
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
@@ -44,21 +45,23 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <Image
-            className="dark:invert"
+            className="dark:invert sm:w-4 sm:h-4"
             aria-hidden
             src="/linkedin.svg"
             alt="Linkedin icon"
-            width={16}
-            height={16}
+            width={20}
+            height={20}
           />
-          Linkedin
+          <span className="hidden sm:block">Linkedin</span>
         </a>
       </nav>
 
       <main className="flex text-lg flex-col row-start-2">
         <div className="flex min-h-screen text-lg flex-col row-start-2 items-center justify-center">
           Oi! Eu sou o
-          <h1 className="text-5xl mt-3 mb-5 text-center">Yudi Ganeko :)</h1>
+          <h1 className="text-5xl mt-3 mb-5 text-center">
+            <NameAnimation />
+          </h1>
           <p className="max-w-5xl text-base leading-7 text-center">
             Um Engenheiro de Software ajudando pessoas na internet.
             <br />
