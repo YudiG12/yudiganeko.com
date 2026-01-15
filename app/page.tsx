@@ -21,8 +21,6 @@ export default function Home() {
             <NameAnimation />
           </h1>
           <p className="max-w-5xl text-base leading-7 text-center">
-            Um Engenheiro de Software ajudando pessoas na internet.
-            <br />
             <span className="text-yellow-600">Pessoas</span> são o propósito e{" "}
             <span className="text-yellow-600">paixão</span> é o combustível. ❤️‍🔥
           </p>
