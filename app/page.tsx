@@ -1,7 +1,6 @@
 import Image from "next/image";
 import ExperienceList from "./experiences";
 import NameAnimation from "./name-animation";
-import Link from "next/link";
 
 export default function Home() {
   return (
@@ -24,79 +23,106 @@ export default function Home() {
             <span className="text-yellow-600">Pessoas</span> são o propósito e{" "}
             <span className="text-yellow-600">paixão</span> é o combustível. ❤️‍🔥
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10 w-full max-w-2xl px-4">
-            <a
-              href="https://www.oquegastei.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-700/70 hover:border-yellow-600 transition-all duration-300 group"
-            >
-              <Image
-                className="dark:invert"
-                src="/link.svg"
-                alt="Link icon"
-                width={20}
-                height={20}
-              />
-              <span className="font-medium group-hover:text-yellow-500 transition-colors">
-                O Que Gastei
-              </span>
-            </a>
-            <a
-              href="https://youtube.com/@yudiganeko"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-700/70 hover:border-red-500 transition-all duration-300 group"
-            >
-              <Image
-                className="dark:invert"
-                src="/youtube.svg"
-                alt="Youtube icon"
-                width={20}
-                height={20}
-              />
-              <span className="font-medium group-hover:text-red-500 transition-colors">
-                YouTube
-              </span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/lucas-yudi-ganeko-1ba3b3178"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-700/70 hover:border-blue-500 transition-all duration-300 group"
-            >
-              <Image
-                className="dark:invert"
-                src="/linkedin.svg"
-                alt="LinkedIn icon"
-                width={20}
-                height={20}
-              />
-              <span className="font-medium group-hover:text-blue-500 transition-colors">
-                LinkedIn
-              </span>
-            </a>
-            <a
-              href="https://instagram.com/ganekoyudi"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-700/70 hover:border-pink-500 transition-all duration-300 group"
-            >
-              <Image
-                className="dark:invert"
-                src="/instagram.svg"
-                alt="Instagram icon"
-                width={20}
-                height={20}
-              />
-              <span className="font-medium group-hover:text-pink-500 transition-colors">
-                Instagram
-              </span>
-            </a>
+          <div className="mt-10 w-full max-w-2xl px-4">
+            <h2 className="text-sm uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 text-center">
+              Projetos
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <a
+                href="https://www.oquegastei.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-yellow-600 dark:hover:border-yellow-600 transition-all duration-300 group"
+              >
+                <Image
+                  className="dark:invert"
+                  src="/link.svg"
+                  alt="Link icon"
+                  width={20}
+                  height={20}
+                />
+                <span className="font-medium group-hover:text-yellow-500 transition-colors">
+                  O Que Gastei
+                </span>
+              </a>
+              <a
+                href="https://www.salariodev.com.br"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 group"
+              >
+                <Image
+                  className="dark:invert"
+                  src="/link.svg"
+                  alt="Link icon"
+                  width={20}
+                  height={20}
+                />
+                <span className="font-medium group-hover:text-green-500 transition-colors">
+                  SalárioDev
+                </span>
+              </a>
+            </div>
+            <h2 className="text-sm uppercase tracking-widest text-gray-500 dark:text-gray-400 mt-8 mb-3 text-center">
+              Redes sociais
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <a
+                href="https://youtube.com/@yudiganeko"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-red-500 dark:hover:border-red-500 transition-all duration-300 group"
+              >
+                <Image
+                  className="dark:invert"
+                  src="/youtube.svg"
+                  alt="Youtube icon"
+                  width={20}
+                  height={20}
+                />
+                <span className="font-medium group-hover:text-red-500 transition-colors">
+                  YouTube
+                </span>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/lucas-yudi-ganeko-1ba3b3178"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 group"
+              >
+                <Image
+                  className="dark:invert"
+                  src="/linkedin.svg"
+                  alt="LinkedIn icon"
+                  width={20}
+                  height={20}
+                />
+                <span className="font-medium group-hover:text-blue-500 transition-colors">
+                  LinkedIn
+                </span>
+              </a>
+              <a
+                href="https://instagram.com/ganekoyudi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-pink-500 dark:hover:border-pink-500 transition-all duration-300 group"
+              >
+                <Image
+                  className="dark:invert"
+                  src="/instagram.svg"
+                  alt="Instagram icon"
+                  width={20}
+                  height={20}
+                />
+                <span className="font-medium group-hover:text-pink-500 transition-colors">
+                  Instagram
+                </span>
+              </a>
+            </div>
           </div>
           <div className="mt-12 animate-bounce">
             <svg
-              className="w-6 h-6 text-gray-500"
+              className="w-6 h-6 text-gray-400 dark:text-gray-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -127,17 +153,9 @@ export default function Home() {
             🇯🇵.
             <br />
             <br />
-            Em 2026 estou focando em meus projetos na internet, criando meu
-            <span className="text-yellow-600"> primeiro SAAS</span>{" "}
-            <Link
-              href="https://www.oquegastei.com"
-              className="text-blue-500 hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              oquegastei.com
-            </Link>
-            .
+            Estou numa jornada de criar meus
+            <span className="text-yellow-600"> próprios produtos </span>
+            na internet. 🚀
           </p>
           <Image
             className="rounded-lg object-cover"
