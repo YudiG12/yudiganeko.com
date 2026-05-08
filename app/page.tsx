@@ -2,7 +2,35 @@ import Image from "next/image";
 import ExperienceList from "./experiences";
 import NameAnimation from "./name-animation";
 
-export default function Home() {
+async function getYoutubeSubscribers(): Promise<number | null> {
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=@yudiganeko&key=${apiKey}`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    const count = data?.items?.[0]?.statistics?.subscriberCount;
+    return count ? Number(count) : null;
+  } catch {
+    return null;
+  }
+}
+
+function formatCount(n: number): string {
+  const truncated = Math.floor(n / 10) * 10;
+  if (truncated >= 1_000) {
+    return `+${(truncated / 1_000).toString().replace(".", ",")} mil`;
+  }
+  return `+${truncated}`;
+}
+
+export default async function Home() {
+  const youtubeSubscribers = await getYoutubeSubscribers();
+
   return (
     <div className="font-mono tracking-wide grid items-center min-h-screen xl:px-60 lg:px-30 md:px-10 px-10 pb-10">
       <main className="flex text-lg flex-col row-start-2">
@@ -66,58 +94,75 @@ export default function Home() {
             <h2 className="text-sm uppercase tracking-widest text-gray-500 dark:text-gray-400 mt-8 mb-3 text-center">
               Redes sociais
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <a
-                href="https://youtube.com/@yudiganeko"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-red-500 dark:hover:border-red-500 transition-all duration-300 group"
-              >
-                <Image
-                  className="dark:invert"
-                  src="/youtube.svg"
-                  alt="Youtube icon"
-                  width={20}
-                  height={20}
-                />
-                <span className="font-medium group-hover:text-red-500 transition-colors">
-                  YouTube
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+              <div className="flex flex-col">
+                <a
+                  href="https://youtube.com/@yudiganeko"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-red-500 dark:hover:border-red-500 transition-all duration-300 group"
+                >
+                  <Image
+                    className="dark:invert"
+                    src="/youtube.svg"
+                    alt="Youtube icon"
+                    width={20}
+                    height={20}
+                  />
+                  <span className="font-medium group-hover:text-red-500 transition-colors">
+                    YouTube
+                  </span>
+                </a>
+                {youtubeSubscribers !== null && (
+                  <span className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
+                    {formatCount(youtubeSubscribers)} inscritos
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-col">
+                <a
+                  href="https://www.linkedin.com/in/lucas-yudi-ganeko-1ba3b3178"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 group"
+                >
+                  <Image
+                    className="dark:invert"
+                    src="/linkedin.svg"
+                    alt="LinkedIn icon"
+                    width={20}
+                    height={20}
+                  />
+                  <span className="font-medium group-hover:text-blue-500 transition-colors">
+                    LinkedIn
+                  </span>
+                </a>
+                <span className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
+                  +12 mil seguidores
                 </span>
-              </a>
-              <a
-                href="https://www.linkedin.com/in/lucas-yudi-ganeko-1ba3b3178"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 group"
-              >
-                <Image
-                  className="dark:invert"
-                  src="/linkedin.svg"
-                  alt="LinkedIn icon"
-                  width={20}
-                  height={20}
-                />
-                <span className="font-medium group-hover:text-blue-500 transition-colors">
-                  LinkedIn
+              </div>
+              <div className="flex flex-col">
+                <a
+                  href="https://instagram.com/ganekoyudi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-pink-500 dark:hover:border-pink-500 transition-all duration-300 group"
+                >
+                  <Image
+                    className="dark:invert"
+                    src="/instagram.svg"
+                    alt="Instagram icon"
+                    width={20}
+                    height={20}
+                  />
+                  <span className="font-medium group-hover:text-pink-500 transition-colors">
+                    Instagram
+                  </span>
+                </a>
+                <span className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
+                  +40 mil seguidores
                 </span>
-              </a>
-              <a
-                href="https://instagram.com/ganekoyudi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-pink-500 dark:hover:border-pink-500 transition-all duration-300 group"
-              >
-                <Image
-                  className="dark:invert"
-                  src="/instagram.svg"
-                  alt="Instagram icon"
-                  width={20}
-                  height={20}
-                />
-                <span className="font-medium group-hover:text-pink-500 transition-colors">
-                  Instagram
-                </span>
-              </a>
+              </div>
             </div>
           </div>
           <div className="mt-12 animate-bounce">
