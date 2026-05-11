@@ -55,7 +55,7 @@ export default async function Home() {
             <h2 className="text-sm uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 text-center">
               Projetos
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <a
                 href="https://www.oquegastei.com"
                 target="_blank"
@@ -88,6 +88,23 @@ export default async function Home() {
                 />
                 <span className="font-medium group-hover:text-green-500 transition-colors">
                   SalárioDev
+                </span>
+              </a>
+              <a
+                href="https://www.generatethumb.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 py-4 px-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/70 hover:border-purple-500 dark:hover:border-purple-500 transition-all duration-300 group"
+              >
+                <Image
+                  className="dark:invert"
+                  src="/link.svg"
+                  alt="Link icon"
+                  width={20}
+                  height={20}
+                />
+                <span className="font-medium group-hover:text-purple-500 transition-colors">
+                  Generate Thumb
                 </span>
               </a>
             </div>
