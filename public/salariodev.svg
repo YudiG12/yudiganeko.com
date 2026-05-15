@@ -1,0 +1,25 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rounded square background matching the nav logo: bg-primary (hsl 250 84% 60%) -->
+  <rect width="180" height="180" rx="40" fill="hsl(250, 84%, 60%)"/>
+  <!-- TrendingUp icon (Lucide), scaled ~4.5× from 24×24, centered with 25px padding -->
+  <!-- Original stroke-width 2.5 → scaled ~11 -->
+  <!-- viewBox 0 0 24 24, scale=5.4, offset_x=22, offset_y=22 -->
+  <!-- Polyline 1: 23 6, 13.5 15.5, 8.5 10.5, 1 18 -->
+  <!-- Polyline 2: 17 6, 23 6, 23 12 -->
+  <polyline
+    points="146.2,54.4 94.9,105.7 67.9,78.7 27.4,119.2"
+    stroke="white"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+  <polyline
+    points="114.2,54.4 146.2,54.4 146.2,86.4"
+    stroke="white"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>
