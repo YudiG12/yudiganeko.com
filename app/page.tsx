@@ -36,23 +36,23 @@ export default async function Home() {
       <main className="flex text-lg flex-col row-start-2">
         {/* Apresentação + Links */}
         <div className="flex min-h-screen text-lg flex-col row-start-2 items-center justify-center">
-          <div className="flex items-center gap-4 sm:gap-5">
+          <div className="flex items-center gap-3 sm:gap-5">
             <Image
-              className="rounded-full object-cover shrink-0 w-16 h-16 sm:w-20 sm:h-20"
+              className="rounded-full object-cover shrink-0 w-14 h-14 sm:w-20 sm:h-20"
               alt="Yudi Ganeko"
               src="/profile.png"
               width={80}
               height={80}
             />
-            <div className="flex flex-col gap-1 min-w-0">
-              <span className="text-sm">Oi! Eu sou o</span>
-              <h1 className="text-xl sm:text-3xl min-h-[1.75rem] sm:min-h-[2.5rem] whitespace-nowrap">
+            <div className="flex flex-col gap-0.5 sm:gap-1 min-w-0">
+              <span className="text-xs sm:text-sm">Oi! Eu sou o</span>
+              <h1 className="text-lg sm:text-3xl min-h-[1.5rem] sm:min-h-[2.5rem] whitespace-nowrap">
                 <NameAnimation />
               </h1>
             </div>
           </div>
-          <div className="mt-16 w-full max-w-3xl px-0 sm:px-4 flex flex-col gap-10">
-            <p className="text-base text-center leading-8">
+          <div className="mt-8 sm:mt-16 w-full max-w-3xl px-0 sm:px-4 flex flex-col gap-6 sm:gap-10">
+            <p className="text-sm sm:text-base text-center leading-7 sm:leading-8">
               Já trabalhei pro{" "}
               <span className="text-red-600 dark:text-red-500 whitespace-nowrap">
                 <Image
@@ -111,17 +111,17 @@ export default async function Home() {
               </span>
               .
             </p>
-            <p className="text-base text-center">
+            <p className="text-sm sm:text-base text-center">
               Hoje, crio sites e apps:
             </p>
-            <div className="flex items-start justify-center gap-3 sm:gap-6">
+            <div className="flex items-start justify-center gap-2 sm:gap-6">
               <a
                 href="https://www.oquegastei.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-3 w-20 sm:w-24 group"
+                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-yellow-600 dark:group-hover:border-yellow-600 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-yellow-600 dark:group-hover:border-yellow-600 transition-all duration-300">
                   <Image
                     src="/oquegastei.svg"
                     alt="O Que Gastei"
@@ -138,9 +138,9 @@ export default async function Home() {
                 href="https://www.salariodev.com.br"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-3 w-20 sm:w-24 group"
+                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-green-500 dark:group-hover:border-green-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-green-500 dark:group-hover:border-green-500 transition-all duration-300">
                   <Image
                     src="/salariodev.svg"
                     alt="SalárioDev"
@@ -157,9 +157,9 @@ export default async function Home() {
                 href="https://www.generatethumb.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-3 w-20 sm:w-24 group"
+                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-purple-500 dark:group-hover:border-purple-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-purple-500 dark:group-hover:border-purple-500 transition-all duration-300">
                   <Image
                     src="/generatethumb.svg"
                     alt="Generate Thumb"
@@ -173,18 +173,18 @@ export default async function Home() {
                 </span>
               </a>
             </div>
-            <p className="text-base text-center">
+            <p className="text-sm sm:text-base text-center">
               E crio conteúdo sobre minha história:
             </p>
-            <div className="flex items-start justify-center gap-3 sm:gap-6">
+            <div className="flex items-start justify-center gap-2 sm:gap-6">
               <a
                 href="https://youtube.com/@yudiganeko"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="YouTube"
-                className="flex flex-col items-center gap-3 w-20 sm:w-24 group"
+                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-red-500 dark:group-hover:border-red-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-red-500 dark:group-hover:border-red-500 transition-all duration-300">
                   <Image
                     src="/youtube.svg"
                     alt="YouTube"
@@ -203,9 +203,9 @@ export default async function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="LinkedIn"
-                className="flex flex-col items-center gap-3 w-20 sm:w-24 group"
+                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-blue-500 dark:group-hover:border-blue-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-blue-500 dark:group-hover:border-blue-500 transition-all duration-300">
                   <Image
                     src="/linkedin.svg"
                     alt="LinkedIn"
@@ -222,9 +222,9 @@ export default async function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Instagram"
-                className="flex flex-col items-center gap-3 w-20 sm:w-24 group"
+                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-violet-500 dark:group-hover:border-violet-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-violet-500 dark:group-hover:border-violet-500 transition-all duration-300">
                   <Image
                     src="/instagram.svg"
                     alt="Instagram"
@@ -238,9 +238,9 @@ export default async function Home() {
               </a>
             </div>
           </div>
-          <div className="mt-12 animate-bounce">
+          <div className="mt-8 sm:mt-12 animate-bounce">
             <svg
-              className="w-6 h-6 text-gray-400 dark:text-gray-500"
+              className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 dark:text-gray-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
