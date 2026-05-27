@@ -38,7 +38,7 @@ export default async function Home() {
         <div className="flex min-h-screen text-lg flex-col row-start-2 items-center justify-center">
           <div className="flex items-center gap-3 sm:gap-5">
             <Image
-              className="rounded-full object-cover shrink-0 w-14 h-14 sm:w-20 sm:h-20"
+              className="rounded-full object-cover shrink-0 w-14 h-14 sm:w-20 sm:h-20 ring-2 ring-burning-flame/70 ring-offset-2 ring-offset-palladian dark:ring-offset-abyssal"
               alt="Yudi Ganeko"
               src="/profile.png"
               width={80}
@@ -76,7 +76,7 @@ export default async function Home() {
                 Boticário
               </span>
               ,{" "}
-              <span className="text-amber-500 dark:text-amber-400 whitespace-nowrap">
+              <span className="text-truffle-trouble dark:text-burning-flame whitespace-nowrap">
                 <svg
                   viewBox="0 0 32 32"
                   width={22}
@@ -121,7 +121,7 @@ export default async function Home() {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-yellow-600 dark:group-hover:border-yellow-600 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
                   <Image
                     src="/oquegastei.svg"
                     alt="O Que Gastei"
@@ -130,7 +130,7 @@ export default async function Home() {
                     className="rounded"
                   />
                 </span>
-                <span className="text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-yellow-500 transition-colors text-center">
+                <span className="text-xs font-medium text-blue-fantastic/70 dark:text-palladian/70 group-hover:text-truffle-trouble dark:group-hover:text-burning-flame transition-colors text-center">
                   O Que Gastei
                 </span>
               </a>
@@ -140,7 +140,7 @@ export default async function Home() {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-green-500 dark:group-hover:border-green-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
                   <Image
                     src="/salariodev.svg"
                     alt="SalárioDev"
@@ -149,7 +149,7 @@ export default async function Home() {
                     className="rounded"
                   />
                 </span>
-                <span className="text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-green-500 transition-colors text-center">
+                <span className="text-xs font-medium text-blue-fantastic/70 dark:text-palladian/70 group-hover:text-truffle-trouble dark:group-hover:text-burning-flame transition-colors text-center">
                   SalárioDev
                 </span>
               </a>
@@ -159,7 +159,7 @@ export default async function Home() {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-purple-500 dark:group-hover:border-purple-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
                   <Image
                     src="/generatethumb.svg"
                     alt="Generate Thumb"
@@ -168,7 +168,7 @@ export default async function Home() {
                     className="rounded"
                   />
                 </span>
-                <span className="text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-purple-500 transition-colors text-center">
+                <span className="text-xs font-medium text-blue-fantastic/70 dark:text-palladian/70 group-hover:text-truffle-trouble dark:group-hover:text-burning-flame transition-colors text-center">
                   Generate Thumb
                 </span>
               </a>
@@ -184,7 +184,7 @@ export default async function Home() {
                 title="YouTube"
                 className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-red-500 dark:group-hover:border-red-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
                   <Image
                     src="/youtube.svg"
                     alt="YouTube"
@@ -193,7 +193,7 @@ export default async function Home() {
                   />
                 </span>
                 {youtubeSubscribers !== null && (
-                  <span className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                  <span className="text-xs text-blue-fantastic/60 dark:text-palladian/60 text-center">
                     {formatCount(youtubeSubscribers)} inscritos
                   </span>
                 )}
@@ -205,7 +205,7 @@ export default async function Home() {
                 title="LinkedIn"
                 className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-blue-500 dark:group-hover:border-blue-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
                   <Image
                     src="/linkedin.svg"
                     alt="LinkedIn"
@@ -213,7 +213,7 @@ export default async function Home() {
                     height={28}
                   />
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                <span className="text-xs text-blue-fantastic/60 dark:text-palladian/60 text-center">
                   +12 mil seguidores
                 </span>
               </a>
@@ -224,7 +224,7 @@ export default async function Home() {
                 title="Instagram"
                 className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
               >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 group-hover:bg-gray-200 dark:group-hover:bg-gray-700/70 group-hover:border-violet-500 dark:group-hover:border-violet-500 transition-all duration-300">
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
                   <Image
                     src="/instagram.svg"
                     alt="Instagram"
@@ -232,7 +232,7 @@ export default async function Home() {
                     height={28}
                   />
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                <span className="text-xs text-blue-fantastic/60 dark:text-palladian/60 text-center">
                   +40 mil seguidores
                 </span>
               </a>
@@ -240,7 +240,7 @@ export default async function Home() {
           </div>
           <div className="mt-8 sm:mt-12 animate-bounce">
             <svg
-              className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 dark:text-gray-500"
+              className="w-5 h-5 sm:w-6 sm:h-6 text-blue-fantastic/40 dark:text-palladian/40"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -254,25 +254,25 @@ export default async function Home() {
             </svg>
           </div>
         </div>
-        <h1 className="text-left font-bold text-2xl">Sobre mim:</h1>
+        <h1 className="text-left font-bold text-2xl text-blue-fantastic dark:text-palladian">Sobre mim:</h1>
         <div className="flex flex-col sm:flex-row mb-10 items-center sm:items-start">
           <p className="my-10 leading-7 sm:mr-15 text-base text-left">
             Tenho 7 anos de experiência profissional como{" "}
-            <span className="text-yellow-600"> Engenheiro de Software</span>
+            <span className="text-truffle-trouble dark:text-burning-flame font-medium"> Engenheiro de Software</span>
             , trabalhando para empresas multibilionárias e pro exterior.
             <br />
             <br />
-            Sou <span className="text-yellow-600">otimista</span> e busco viver
+            Sou <span className="text-truffle-trouble dark:text-burning-flame font-medium">otimista</span> e busco viver
             a vida aproveitando a jornada.
             <br />
             <br />
             Nascido e crescido em São Paulo, sou descendente de
-            <span className="text-yellow-600"> Okinawa, Japão</span>
+            <span className="text-truffle-trouble dark:text-burning-flame font-medium"> Okinawa, Japão</span>
             🇯🇵.
             <br />
             <br />
             Estou numa jornada de criar meus
-            <span className="text-yellow-600"> próprios produtos </span>
+            <span className="text-truffle-trouble dark:text-burning-flame font-medium"> próprios produtos </span>
             na internet. 🚀
           </p>
           <Image
@@ -283,11 +283,11 @@ export default async function Home() {
             height={200}
           />
         </div>
-        <h1 className="text-left mb-10 font-bold text-2xl">
+        <h1 className="text-left mb-10 font-bold text-2xl text-blue-fantastic dark:text-palladian">
           Minha experiência:
         </h1>
         <ExperienceList />
-        <footer className="text-center text-sm text-gray-500 mt-20">
+        <footer className="text-center text-sm text-blue-fantastic/50 dark:text-palladian/50 mt-20">
           Criado por Yudi Ganeko usando NextJs e TailwindCSS.
           <br /> © Todos os direitos reservados.
         </footer>

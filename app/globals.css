@@ -3,20 +3,45 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f8f9fa;
-  --foreground: #171717;
-  --body-color: #171717;
+  --palladian: #f9f7f4;
+  --oatmeal: #c9c1b1;
+  --blue-fantastic: #2c3b4d;
+  --burning-flame: #ffb162;
+  --truffle-trouble: #a35139;
+  --abyssal: #1b2632;
+
+  --background: var(--palladian);
+  --foreground: var(--blue-fantastic);
+  --body-color: var(--blue-fantastic);
+  --surface: #f4f0e8;
+  --surface-strong: #e3dccd;
+  --border: var(--oatmeal);
+  --muted: #6b7785;
+  --accent: var(--truffle-trouble);
+  --accent-strong: var(--burning-flame);
 }
 
 .dark {
-  --background: #151b2b;
-  --foreground: #ededed;
-  --body-color: #cfcfcf;
+  --background: var(--abyssal);
+  --foreground: var(--palladian);
+  --body-color: #d8d2c4;
+  --surface: #243142;
+  --surface-strong: #2c3b4d;
+  --border: #3a4a5d;
+  --muted: #8a96a4;
+  --accent: var(--burning-flame);
+  --accent-strong: var(--burning-flame);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-palladian: #f9f7f4;
+  --color-oatmeal: #c9c1b1;
+  --color-blue-fantastic: #2c3b4d;
+  --color-burning-flame: #ffb162;
+  --color-truffle-trouble: #a35139;
+  --color-abyssal: #1b2632;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

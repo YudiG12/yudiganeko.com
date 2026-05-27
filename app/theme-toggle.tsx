@@ -24,7 +24,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label="Alternar tema"
-      className="fixed top-4 right-4 z-50 p-2 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/70 hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-yellow-600 dark:hover:border-yellow-600 transition-colors cursor-pointer"
+      className="fixed top-4 right-4 z-50 p-2 rounded-full border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/70 dark:bg-blue-fantastic/60 hover:bg-oatmeal/40 dark:hover:bg-blue-fantastic hover:border-burning-flame dark:hover:border-burning-flame transition-colors cursor-pointer"
     >
       <span className="block w-5 h-5">
         {mounted &&
@@ -33,7 +33,7 @@ export default function ThemeToggle() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="w-5 h-5 text-yellow-500"
+              className="w-5 h-5 text-burning-flame"
             >
               <path
                 fillRule="evenodd"
@@ -46,7 +46,7 @@ export default function ThemeToggle() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="w-5 h-5 text-gray-700"
+              className="w-5 h-5 text-blue-fantastic"
             >
               <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
             </svg>

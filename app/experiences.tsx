@@ -74,8 +74,8 @@ export default function ExperienceList() {
             className={`text-base cursor-pointer px-4 py-2 mb-2 transition-all
               ${
                 selected === idx
-                  ? "text-yellow-600 border-l-2 border-yellow-600 bg-gray-100 dark:bg-[#192133]"
-                  : "text-gray-500 dark:text-gray-400 hover:text-yellow-600"
+                  ? "text-truffle-trouble dark:text-burning-flame border-l-2 border-burning-flame bg-oatmeal/25 dark:bg-blue-fantastic/50"
+                  : "text-blue-fantastic/60 dark:text-palladian/60 hover:text-truffle-trouble dark:hover:text-burning-flame"
               }
             `}
             onClick={() => setSelected(idx)}
@@ -85,17 +85,17 @@ export default function ExperienceList() {
         ))}
       </ul>
       <div className="flex-1 p-8">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+        <h2 className="text-2xl font-bold text-blue-fantastic dark:text-palladian mb-1">
           {experiences[selected].role}{" "}
-          <span className="text-yellow-600">
+          <span className="text-truffle-trouble dark:text-burning-flame">
             @ {experiences[selected].company}
           </span>
         </h2>
-        <div className="text-gray-500 dark:text-gray-400 mb-6">{experiences[selected].period}</div>
+        <div className="text-blue-fantastic/60 dark:text-palladian/60 mb-6">{experiences[selected].period}</div>
         <ul className="text-sm leading-7 space-y-4">
           {experiences[selected].highlights.map((item, i) => (
-            <li key={i} className="flex items-start text-gray-600 dark:text-gray-300">
-              <span className="text-yellow-600 mr-3">▸</span>
+            <li key={i} className="flex items-start text-blue-fantastic/80 dark:text-palladian/80">
+              <span className="text-burning-flame mr-3">▸</span>
               <span>{item}</span>
             </li>
           ))}

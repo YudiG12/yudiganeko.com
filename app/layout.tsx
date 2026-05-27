@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
 import "./globals.css";
 import ThemeToggle from "./theme-toggle";
 
@@ -30,9 +32,21 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Link
+          href="/"
+          aria-label="Yudi Ganeko"
+          className="fixed top-4 left-4 z-50 block transition-opacity hover:opacity-80"
+        >
+          <Image
+            src="/logo.png"
+            alt="Yudi Ganeko"
+            width={871}
+            height={286}
+            priority
+            className="h-8 sm:h-10 w-auto dark:invert"
+          />
+        </Link>
         <ThemeToggle />
         {children}
       </body>
