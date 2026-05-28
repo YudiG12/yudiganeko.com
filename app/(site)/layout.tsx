@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import ThemeToggle from "./theme-toggle";
 
-// Site-wide chrome: home logo (top-left) + theme toggle. Lives in this
-// route group so standalone routes (like /media-kit) can skip it.
+// Site-wide chrome: home logo top-left. Theme toggle lives in the root
+// layout so it shows on every route (including /media-kit).
 export default function SiteLayout({
   children,
 }: Readonly<{
@@ -25,7 +24,6 @@ export default function SiteLayout({
           className="h-8 sm:h-10 w-auto dark:invert"
         />
       </Link>
-      <ThemeToggle />
       {children}
     </>
   );

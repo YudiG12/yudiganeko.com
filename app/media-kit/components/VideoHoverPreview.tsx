@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 
 // YouTube hover preview — cycles through the 3 alternate thumbnails YouTube
-// generates for every video (`1.jpg`, `2.jpg`, `3.jpg` — different timestamps,
-// ~3-4 KB each). Light as a feather, no iframe, no streaming.
+// generates for every video (`hq1.jpg`, `hq2.jpg`, `hq3.jpg` — different
+// timestamps, 480×360). Light as a feather, no iframe, no streaming.
 export function YouTubeHoverPreview({
   videoId,
   thumbnail,
@@ -28,9 +28,9 @@ export function YouTubeHoverPreview({
   }, [hover]);
 
   const frames = [
-    `https://i.ytimg.com/vi/${videoId}/1.jpg`,
-    `https://i.ytimg.com/vi/${videoId}/2.jpg`,
-    `https://i.ytimg.com/vi/${videoId}/3.jpg`,
+    `https://i.ytimg.com/vi/${videoId}/hq1.jpg`,
+    `https://i.ytimg.com/vi/${videoId}/hq2.jpg`,
+    `https://i.ytimg.com/vi/${videoId}/hq3.jpg`,
   ];
 
   return (
