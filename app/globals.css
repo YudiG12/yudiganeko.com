@@ -19,6 +19,22 @@
   --muted: #6b7785;
   --accent: var(--truffle-trouble);
   --accent-strong: var(--burning-flame);
+
+  /* ─── Media-kit brand tokens (shared with the YT pipeline dashboard) ─── */
+  --mk-bg: #f9f7f4;
+  --mk-bg2: #fcfbf8;
+  --mk-surface: #fefcf8;
+  --mk-surface2: #f0ede6;
+  --mk-paper: #fefefa;
+  --mk-ink: #1c1e26;
+  --mk-muted: #5a5854;
+  --mk-faint: #8a8276;
+  --mk-line: rgba(28, 30, 38, 0.12);
+  --mk-line-strong: rgba(28, 30, 38, 0.28);
+  --mk-flame: #ffb162;
+  --mk-truffle: #a35149;
+  --mk-indigo: #1f2733;
+  --mk-palladian: #f9f7f4;
 }
 
 .dark {
@@ -31,6 +47,18 @@
   --muted: #8a96a4;
   --accent: var(--burning-flame);
   --accent-strong: var(--burning-flame);
+
+  /* Media-kit dark mode — flip backgrounds to deep indigo, keep accents. */
+  --mk-bg: #171b24;
+  --mk-bg2: #1f2733;
+  --mk-surface: #262f3c;
+  --mk-surface2: #2e3846;
+  --mk-paper: #1f2733;
+  --mk-ink: #f9f7f4;
+  --mk-muted: #bcb4a4;
+  --mk-faint: #7c7569;
+  --mk-line: rgba(249, 247, 244, 0.12);
+  --mk-line-strong: rgba(249, 247, 244, 0.28);
 }
 
 @theme inline {
@@ -44,10 +72,73 @@
   --color-abyssal: #1b2632;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* ─── Media-kit utility-class colours (bg-flame, text-ink, etc) ─── */
+  --color-bg: var(--mk-bg);
+  --color-bg2: var(--mk-bg2);
+  --color-surface: var(--mk-surface);
+  --color-surface2: var(--mk-surface2);
+  --color-paper: var(--mk-paper);
+  --color-ink: var(--mk-ink);
+  --color-muted: var(--mk-muted);
+  --color-faint: var(--mk-faint);
+  --color-line: var(--mk-line);
+  --color-line-strong: var(--mk-line-strong);
+  --color-flame: var(--mk-flame);
+  --color-truffle: var(--mk-truffle);
+  --color-indigo: var(--mk-indigo);
 }
 
 body {
   background: var(--background);
   color: var(--body-color);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+   Media-kit specific styles — keyframes, marquee, hover animations.
+   Scoped via classes so they don't leak into the rest of the site.
+   ──────────────────────────────────────────────────────────────────── */
+
+@keyframes mk-fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fadeUp {
+  animation: mk-fadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mk-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: mk-marquee 70s linear infinite;
+  width: max-content;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
 }
