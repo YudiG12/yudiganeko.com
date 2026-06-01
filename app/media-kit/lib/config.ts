@@ -94,7 +94,7 @@ export const CONFIG: MediaKitConfig = {
         "60-90s slot inside a channel video. Genuine on-screen pitch.",
       format: "60-90s dentro de um vídeo",
       formatEN: "60-90s inside a video",
-      priceBRL: 5000,
+      priceUSD: 1100,
     },
     {
       name: "Vídeo vertical",
