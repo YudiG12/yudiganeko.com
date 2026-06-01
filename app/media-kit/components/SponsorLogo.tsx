@@ -37,6 +37,10 @@ export default function SponsorLogo({
       (domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=128` : null)
     : null;
 
+  // Curated logos are full marks (often transparent, non-square) — fit them
+  // whole. Favicons are square and look best edge-to-edge.
+  const isCurated = Boolean(logoSrc) && !failed;
+
   if (!src) {
     return (
       <span
@@ -58,7 +62,7 @@ export default function SponsorLogo({
       <img
         src={src}
         alt={brand}
-        className="h-full w-full object-cover"
+        className={`h-full w-full ${isCurated ? "object-contain p-0.5" : "object-cover"}`}
         onError={() => setFailed(true)}
         loading="lazy"
         referrerPolicy="no-referrer"

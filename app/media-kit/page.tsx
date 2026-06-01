@@ -248,6 +248,7 @@ export default async function MediaKitPage({
   const config = CONFIG;
   const tagline = locale === "en" ? config.taglineEN : config.tagline;
   const intro = locale === "en" ? config.introEN : config.intro;
+
   const sponsors = config.sponsors;
 
   return (
@@ -261,7 +262,7 @@ export default async function MediaKitPage({
       </div>
 
       {/* Hero streams in first, on its own. */}
-      <div className="mx-auto mt-8 max-w-[1180px] md:mt-12">
+      <div className="mx-auto mt-4 max-w-[1180px] md:mt-5">
         <Suspense
           fallback={
             <HeroSkeleton
@@ -269,6 +270,7 @@ export default async function MediaKitPage({
               tagline={tagline}
               intro={intro}
               email={config.contact.email}
+              sponsors={sponsors}
               copyLabel={t("copy.copy")}
               copiedLabel={t("copy.copied")}
             />
@@ -280,16 +282,10 @@ export default async function MediaKitPage({
             tagline={tagline}
             intro={intro}
             email={config.contact.email}
+            sponsors={sponsors}
           />
         </Suspense>
       </div>
-
-      {/* "Trusted by" — full-width marquee, the first social-proof punch
-          after the hero. Logos loop left forever; the mask fades the edges
-          so items appear to drift in and out of view. */}
-      {sponsors.length > 0 && (
-        <SponsorsMarquee sponsors={sponsors} t={t} />
-      )}
 
       {/* Each section streams in independently — the page chrome above is
           static and instant, sections fade up as their data resolves. */}
@@ -359,12 +355,14 @@ async function HeroAsync({
   tagline,
   intro,
   email,
+  sponsors,
 }: {
   t: T;
   locale: Locale;
   tagline: string;
   intro: string;
   email: string;
+  sponsors: SponsorEntry[];
 }) {
   const [ytStats, igProfile] = await Promise.all([
     fetchChannelStats(),
@@ -378,6 +376,7 @@ async function HeroAsync({
         tagline={tagline}
         intro={intro}
         email={email}
+        sponsors={sponsors}
         ytStats={ytStats}
         igProfile={igProfile}
       />
@@ -457,6 +456,7 @@ function HeroSkeleton({
   tagline,
   intro,
   email,
+  sponsors,
   copyLabel,
   copiedLabel,
 }: {
@@ -464,47 +464,71 @@ function HeroSkeleton({
   tagline: string;
   intro: string;
   email: string;
+  sponsors: SponsorEntry[];
   copyLabel: string;
   copiedLabel: string;
 }) {
+  // Mirrors the real Hero panel so there's no layout jump when stats stream
+  // in — only the four stat chips are skeletons; portrait + copy render now.
   return (
-    <section className="grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
-      <div className="md:col-span-7">
-        <div className="flex items-center gap-4">
-          <div className="h-16 w-16 shrink-0 rounded-full border border-line bg-paper/40 md:h-[84px] md:w-[84px]" />
-          <div>
-            <Eyebrow>{t("eyebrow.book")}</Eyebrow>
-            <div className="mt-1.5 h-3.5 w-40 rounded bg-paper/60" />
+    <section className="relative overflow-hidden rounded-[28px] border border-line bg-indigo text-palladian md:rounded-[40px]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(680px 540px at 80% 6%, rgba(255,177,98,0.42), transparent 60%), radial-gradient(560px 520px at 99% 96%, rgba(163,81,73,0.5), transparent 62%), radial-gradient(700px 480px at 6% -8%, rgba(255,255,255,0.07), transparent 60%)",
+        }}
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/yudi-portrait.png"
+        alt="Yudi Ganeko"
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 right-2 z-10 hidden h-[98%] w-auto max-w-[46%] select-none object-contain object-bottom drop-shadow-2xl md:block lg:right-8"
+      />
+      <div className="relative z-20 grid grid-cols-1 gap-8 p-6 sm:p-8 md:grid-cols-12 md:gap-10 md:p-12">
+        <div className="md:col-span-7">
+          <h1 className="text-[30px] font-bold leading-[0.95] tracking-[-0.04em] sm:text-[48px] md:text-[64px]">
+            {/* Headline is locale-driven, not data-driven — render it immediately. */}
+            {t("headline.l1")} <br />
+            <span className="text-flame">{t("headline.l2")}</span>
+          </h1>
+          <p className="mt-5 max-w-xl text-[15px] leading-[1.55] text-palladian/75 sm:text-[16px]">
+            {renderWithAiHighlight(tagline)}
+          </p>
+          <p className="mt-3 max-w-lg text-[13.5px] leading-[1.6] text-palladian/55 sm:text-[14px]">
+            {renderWithStoryHighlight(intro)}
+          </p>
+          <div className="mt-7 grid max-w-xl grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-[78px] flex-1 rounded-2xl border border-palladian/15 bg-palladian/[0.06] sm:min-w-[124px]"
+              />
+            ))}
           </div>
+          <div className="mt-6 flex max-w-full justify-stretch sm:justify-start">
+            <CopyEmailButton
+              email={email}
+              copyLabel={copyLabel}
+              copiedLabel={copiedLabel}
+              compact
+            />
+          </div>
+
+          {/* Sponsors render now — same as the resolved hero, no jump. */}
+          <HeroSponsors sponsors={sponsors} t={t} />
         </div>
-        <h1 className="mt-7 text-[42px] font-bold leading-[0.95] tracking-[-0.035em] text-ink md:text-[72px]">
-          {/* Headline is locale-driven, not data-driven — render it immediately. */}
-          {t("headline.l1")} <br />
-          <span className="text-truffle">{t("headline.l2")}</span>
-        </h1>
-        <p className="mt-5 max-w-xl text-[16px] leading-[1.55] text-muted">
-          {renderWithAiHighlight(tagline)}
-        </p>
-        <p className="mt-3 max-w-xl text-[14.5px] leading-[1.6] text-muted">
-          {intro}
-        </p>
-      </div>
-      <aside className="md:col-span-5">
-        <div className="grid grid-cols-2 gap-3">
-          <SkeletonBox className="h-[152px]" />
-          <SkeletonBox className="h-[152px]" />
-          <SkeletonBox className="h-[152px]" />
-          <SkeletonBox className="h-[152px]" />
-        </div>
-        <div className="mt-4 flex justify-end">
-          <CopyEmailButton
-            email={email}
-            copyLabel={copyLabel}
-            copiedLabel={copiedLabel}
-            compact
+        <div className="-mb-6 flex justify-center sm:-mb-8 md:hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/yudi-portrait.png"
+            alt="Yudi Ganeko"
+            className="pointer-events-none h-auto max-h-[300px] w-auto select-none object-contain drop-shadow-2xl"
           />
         </div>
-      </aside>
+      </div>
     </section>
   );
 }
@@ -631,6 +655,89 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Oversized network glyph that sits behind a stat chip — big, tilted and
+// bleeding off the bottom-right corner so the chip reads as "the YouTube one".
+function SocialGlyph({ kind }: { kind: "youtube" | "instagram" }) {
+  return (
+    <span
+      aria-hidden
+      className={`pointer-events-none absolute -bottom-5 -right-4 z-0 ${
+        kind === "youtube" ? "text-flame/25" : "text-palladian/15"
+      }`}
+      style={{ transform: "rotate(-18deg)" }}
+    >
+      {kind === "youtube" ? (
+        <svg width="92" height="92" viewBox="0 0 24 24" fill="none">
+          <rect
+            x="1.5"
+            y="5"
+            width="21"
+            height="14"
+            rx="4.5"
+            stroke="currentColor"
+            strokeWidth="1.7"
+          />
+          <path d="M10 8.7 16 12l-6 3.3V8.7Z" fill="currentColor" />
+        </svg>
+      ) : (
+        <svg
+          width="88"
+          height="88"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        >
+          <rect x="3" y="3" width="18" height="18" rx="5.4" />
+          <circle cx="12" cy="12" r="4.2" />
+          <circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none" />
+        </svg>
+      )}
+    </span>
+  );
+}
+
+// "Trusted by" social-proof strip, dark variant — lives at the bottom of the
+// hero's content column so it never collides with the portrait. Logos loop
+// left forever; the edge mask fades them in and out.
+function HeroSponsors({ sponsors, t }: { sponsors: SponsorEntry[]; t: T }) {
+  if (sponsors.length === 0) return null;
+  // Duplicate 2× so the -50% marquee keyframe wraps seamlessly.
+  const row = [...sponsors, ...sponsors];
+  return (
+    <div className="mt-8 border-t border-palladian/15 pt-5">
+      <div className="mb-3.5 flex items-center gap-2.5 font-mono text-[9.5px] uppercase tracking-[0.26em] text-palladian/50">
+        <span>{t("section.sponsors")}</span>
+        <span aria-hidden className="h-[1px] flex-1 bg-palladian/12" />
+        <span className="hidden text-palladian/40 sm:inline">
+          {t("section.sponsors.aside")}
+        </span>
+      </div>
+      <div className="marquee-mask overflow-hidden">
+        <div className="animate-marquee flex items-center gap-5 sm:gap-8">
+          {row.map((s, i) => (
+            <div
+              key={`${s.key}-${i}`}
+              className="flex shrink-0 items-center gap-2 sm:gap-2.5"
+            >
+              <SponsorLogo
+                brand={s.brand}
+                domain={s.domain}
+                logoSrc={s.logoSrc}
+                color={s.color}
+                size="md"
+              />
+              <span className="whitespace-nowrap text-[14px] font-semibold tracking-tight text-palladian/90 sm:text-[15px]">
+                {s.brand}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Hero
 // ─────────────────────────────────────────────────────────────────────────────
@@ -639,6 +746,7 @@ function Hero({
   tagline,
   intro,
   email,
+  sponsors,
   ytStats,
   igProfile,
 }: {
@@ -647,104 +755,155 @@ function Hero({
   tagline: string;
   intro: string;
   email: string;
+  sponsors: SponsorEntry[];
   ytStats: YTStats | null;
   igProfile: IGProfile | null;
 }) {
+  // Stats become glass chips on the dark panel — YouTube subscribers get the
+  // flame accent so the headline number reads first.
+  const stats = (
+    [
+      ytStats && {
+        eyebrow: t("stat.youtube"),
+        value: shortNumber(ytStats.subscribers),
+        label: t("stat.subscribers"),
+        accent: true,
+        glyph: "youtube" as const,
+      },
+      igProfile && {
+        eyebrow: t("stat.instagram"),
+        value: shortNumber(igProfile.followers),
+        label: t("stat.followers"),
+        glyph: "instagram" as const,
+      },
+      ytStats && {
+        eyebrow: t("stat.totalViews"),
+        value: shortNumber(ytStats.totalViews),
+        label: t("stat.onChannel"),
+      },
+      ytStats && {
+        eyebrow: t("stat.videos"),
+        value: ytStats.videoCount.toString(),
+        label: t("stat.published"),
+      },
+    ].filter(Boolean) as {
+      eyebrow: string;
+      value: string;
+      label: string;
+      accent?: boolean;
+      glyph?: "youtube" | "instagram";
+    }[]
+  );
+
   return (
-    <section className="grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
-      <div className="md:col-span-7">
-        <div className="flex items-center gap-4">
-          {ytStats?.thumbnail ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={ytStats.thumbnail}
-              alt={ytStats.title}
-              width={84}
-              height={84}
-              className="h-16 w-16 shrink-0 rounded-full border border-line object-cover shadow-sm md:h-[84px] md:w-[84px]"
-            />
-          ) : (
-            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-indigo font-mono text-[18px] font-bold text-palladian md:h-[84px] md:w-[84px]">
-              YG
-            </span>
-          )}
-          <div>
-            <Eyebrow>{t("eyebrow.book")}</Eyebrow>
-            <div className="mt-1.5 text-[13px] font-mono uppercase tracking-[0.18em] text-muted">
-              {ytStats?.title ?? "Yudi Ganeko"}
+    <section className="relative overflow-hidden rounded-[28px] border border-line bg-indigo text-palladian md:rounded-[40px]">
+      {/* Ambient brand glows — flame top-right, truffle bottom-right. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(680px 540px at 80% 6%, rgba(255,177,98,0.42), transparent 60%), radial-gradient(560px 520px at 99% 96%, rgba(163,81,73,0.5), transparent 62%), radial-gradient(700px 480px at 6% -8%, rgba(255,255,255,0.07), transparent 60%)",
+        }}
+      />
+      {/* Faint technical grid — nods to the build-in-public, dev side. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.7) 1px, transparent 1px)",
+          backgroundSize: "46px 46px",
+          maskImage:
+            "radial-gradient(70% 70% at 70% 30%, #000, transparent 75%)",
+          WebkitMaskImage:
+            "radial-gradient(70% 70% at 70% 30%, #000, transparent 75%)",
+        }}
+      />
+
+      {/* Desktop portrait — stands on the panel's bottom edge. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/yudi-portrait.png"
+        alt="Yudi Ganeko"
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 right-2 z-10 hidden h-[98%] w-auto max-w-[46%] select-none object-contain object-bottom drop-shadow-2xl md:block lg:right-8"
+      />
+
+      <div className="relative z-20 grid grid-cols-1 gap-8 p-6 sm:p-8 md:grid-cols-12 md:gap-10 md:p-12">
+        <div className="md:col-span-7">
+          <h1 className="text-[30px] font-bold leading-[0.95] tracking-[-0.04em] sm:text-[48px] md:text-[64px]">
+            {t("headline.l1")} <br />
+            <span className="text-flame">{t("headline.l2")}</span>
+          </h1>
+
+          <p className="mt-5 max-w-xl text-[15px] leading-[1.55] text-palladian/75 sm:text-[16px]">
+            {renderWithAiHighlight(tagline)}
+          </p>
+          <p className="mt-3 max-w-lg text-[13.5px] leading-[1.6] text-palladian/55 sm:text-[14px]">
+            {renderWithStoryHighlight(intro)}
+          </p>
+
+          {/* Live stats as glass chips — readable on the dark panel. */}
+          {stats.length > 0 ? (
+            <div className="mt-7 grid max-w-xl grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
+              {stats.map((s) => (
+                <div
+                  key={s.label}
+                  className={`relative flex-1 overflow-hidden rounded-2xl border px-4 py-3 backdrop-blur-sm sm:min-w-[124px] ${
+                    s.accent
+                      ? "border-flame/40 bg-flame/[0.14]"
+                      : "border-palladian/15 bg-palladian/[0.06]"
+                  }`}
+                >
+                  {/* Oversized, rotated network glyph bleeding off the chip. */}
+                  {s.glyph && <SocialGlyph kind={s.glyph} />}
+                  <div className="relative z-10">
+                    <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-palladian/55">
+                      {s.eyebrow}
+                    </div>
+                    <div className="mt-1.5 text-[24px] font-bold leading-none tracking-tight">
+                      {s.value}
+                    </div>
+                    <div className="mt-1 text-[11px] text-palladian/55">
+                      {s.label}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-        </div>
-
-        <h1 className="mt-7 text-[34px] font-bold leading-[0.95] tracking-[-0.035em] text-ink sm:text-[42px] md:text-[72px]">
-          {t("headline.l1")} <br />
-          <span className="text-truffle">{t("headline.l2")}</span>
-        </h1>
-        <p className="mt-5 max-w-xl text-[15px] leading-[1.55] text-muted sm:text-[16px]">
-          {renderWithAiHighlight(tagline)}
-        </p>
-        <p className="mt-3 max-w-xl text-[13.5px] leading-[1.6] text-muted sm:text-[14.5px]">
-          {intro}
-        </p>
-      </div>
-
-      <aside className="md:col-span-5">
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-          {ytStats && (
-            <BigStat
-              eyebrow={t("stat.youtube")}
-              value={shortNumber(ytStats.subscribers)}
-              label={t("stat.subscribers")}
-              tone="indigo"
-            />
-          )}
-          {igProfile && (
-            <BigStat
-              eyebrow={t("stat.instagram")}
-              value={shortNumber(igProfile.followers)}
-              label={t("stat.followers")}
-              tone="flame"
-            />
-          )}
-          {ytStats && (
-            <BigStat
-              eyebrow={t("stat.totalViews")}
-              value={shortNumber(ytStats.totalViews)}
-              label={t("stat.onChannel")}
-              tone="paper"
-            />
-          )}
-          {ytStats && (
-            <BigStat
-              eyebrow={t("stat.videos")}
-              value={ytStats.videoCount.toString()}
-              label={t("stat.published")}
-              tone="paper"
-            />
-          )}
-          {!ytStats && !igProfile && (
-            <div className="col-span-2 rounded-2xl border border-dashed border-line p-6 text-center">
-              <Eyebrow>setup</Eyebrow>
-              <p className="mt-3 text-[13.5px] leading-snug text-muted">
+          ) : (
+            <div className="mt-7 max-w-md rounded-2xl border border-dashed border-palladian/25 p-5">
+              <p className="text-[13.5px] leading-snug text-palladian/65">
                 {t("noCreds")}
               </p>
             </div>
           )}
+
+          {/* Quick-grab email so a sponsor can act without scrolling. */}
+          <div className="mt-6 flex max-w-full justify-stretch sm:justify-start">
+            <CopyEmailButton
+              email={email}
+              copyLabel={t("copy.copy")}
+              copiedLabel={t("copy.copied")}
+              compact
+            />
+          </div>
+
+          {/* Social proof, right inside the hero. */}
+          <HeroSponsors sponsors={sponsors} t={t} />
         </div>
 
-        {/* Quick-grab email — same copy affordance as the bottom CTA, but
-            sitting right next to the stats so a sponsor can act without
-            scrolling through the whole kit. On mobile the pill stretches full
-            width so the email is always fully readable. */}
-        <div className="mt-4 flex max-w-full justify-stretch sm:justify-end">
-          <CopyEmailButton
-            email={email}
-            copyLabel={t("copy.copy")}
-            copiedLabel={t("copy.copied")}
-            compact
+        {/* Mobile portrait — flush with the panel's bottom edge. */}
+        <div className="-mb-6 flex justify-center sm:-mb-8 md:hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/yudi-portrait.png"
+            alt="Yudi Ganeko"
+            className="pointer-events-none h-auto max-h-[300px] w-auto select-none object-contain drop-shadow-2xl"
           />
         </div>
-      </aside>
+      </div>
     </section>
   );
 }
@@ -1262,64 +1421,6 @@ function mediaTypeLabel(t: T, type: IGMedia["mediaType"]): string {
 // ─────────────────────────────────────────────────────────────────────────────
 // Sponsors
 // ─────────────────────────────────────────────────────────────────────────────
-function SponsorsMarquee({
-  sponsors,
-  t,
-}: {
-  sponsors: SponsorEntry[];
-  t: T;
-}) {
-  // Duplicate exactly 2× — the `animate-marquee` keyframes translate by -50%,
-  // which equals one copy's width. That gives a seamless infinite scroll.
-  const row = [...sponsors, ...sponsors];
-
-  return (
-    <section className="relative mt-14 overflow-hidden border-y border-line bg-paper/40 py-7 md:mt-20 md:py-9">
-      <div className="mx-auto mb-5 flex max-w-[1180px] items-center gap-2 px-5 font-mono text-[10.5px] uppercase tracking-[0.28em] text-faint md:px-10">
-        <span aria-hidden className="h-[1px] w-6 bg-line-strong" />
-        <span>{t("section.sponsors")}</span>
-        <span aria-hidden className="h-[1px] flex-1 bg-line" />
-        <span className="hidden text-faint/80 sm:inline">
-          {t("section.sponsors.aside")}
-        </span>
-      </div>
-
-      <div className="marquee-mask">
-        <div className="animate-marquee flex items-center gap-6 sm:gap-10 md:gap-12">
-          {row.map((s, i) => (
-            <div
-              key={`${s.key}-${i}`}
-              className="flex shrink-0 items-center gap-2 px-1 sm:gap-3 sm:px-2"
-            >
-              <span className="block sm:hidden">
-                <SponsorLogo
-                  brand={s.brand}
-                  domain={s.domain}
-                  logoSrc={s.logoSrc}
-                  color={s.color}
-                  size="md"
-                />
-              </span>
-              <span className="hidden sm:block">
-                <SponsorLogo
-                  brand={s.brand}
-                  domain={s.domain}
-                  logoSrc={s.logoSrc}
-                  color={s.color}
-                  size="lg"
-                />
-              </span>
-              <span className="whitespace-nowrap text-[13px] font-semibold tracking-tight text-ink sm:text-[17px]">
-                {s.brand}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function Sponsors({
   t,
   sponsors,
@@ -1540,6 +1641,21 @@ function ContactCTA({
         </div>
       </div>
     </section>
+  );
+}
+
+// Highlights the channel's core promise — "história real" / "real story" — in
+// the intro so the one line that sells the content pops in flame.
+function renderWithStoryHighlight(text: string) {
+  const parts = text.split(/(história real|real story)/i);
+  return parts.map((p, i) =>
+    /^(história real|real story)$/i.test(p) ? (
+      <span key={i} className="font-semibold text-flame">
+        {p}
+      </span>
+    ) : (
+      <span key={i}>{p}</span>
+    ),
   );
 }
 
