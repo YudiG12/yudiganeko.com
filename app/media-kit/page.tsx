@@ -83,6 +83,8 @@ const DICT = {
       "Engagement needs OAuth — connect YouTube Analytics + Instagram Insights.",
     "section.demographics": "Who watches",
     "section.videos": "Top-reach videos",
+    "section.videos.note":
+      "Every one of these was a brand collab — and still the channel's highest-reach videos. A well-built partnership doesn't compete with the content, it performs with it.",
     "section.posts": "Featured posts",
     "section.sponsors": "Trusted by",
     "section.sponsors.aside": "Many partners have worked with me",
@@ -169,6 +171,8 @@ const DICT = {
       "Engagement precisa de OAuth — conecte YouTube Analytics + Instagram Insights.",
     "section.demographics": "Quem assiste",
     "section.videos": "Vídeos com maior alcance",
+    "section.videos.note":
+      "Todos esses vídeos foram colaborações com marcas — e ainda assim são os de maior alcance do canal. Parceria bem-feita não compete com o conteúdo, ela performa junto.",
     "section.posts": "Posts em destaque",
     "section.sponsors": "Marcas que confiaram",
     "section.sponsors.aside": "Inúmeros parceiros já trabalharam comigo",
@@ -1331,8 +1335,15 @@ function TopVideos({
     );
   }
   return (
-    <div className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-3">
-      {videos.map((v, i) => (
+    <div className="flex flex-col gap-4 sm:gap-5">
+      <p className="rounded-2xl border border-line bg-truffle/[0.06] px-4 py-3 text-[12px] leading-relaxed text-muted sm:px-5 sm:py-4 sm:text-[13px]">
+        <span className="mr-2 font-mono text-[10px] uppercase tracking-[0.18em] text-truffle">
+          ★
+        </span>
+        {t("section.videos.note")}
+      </p>
+      <div className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-3">
+        {videos.map((v, i) => (
         <a
           key={v.id}
           href={v.url}
@@ -1365,7 +1376,8 @@ function TopVideos({
             </div>
           </div>
         </a>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
