@@ -83,7 +83,7 @@ export const CONFIG: MediaKitConfig = {
         "Full video about the brand, woven into my own narrative. Strong hooks, real demos.",
       format: "10-15 min, YouTube",
       formatEN: "10-15 min, YouTube",
-      priceUSD: 2300,
+      priceUSD: 2400,
     },
     {
       name: "YouTube · inserção",
@@ -94,7 +94,7 @@ export const CONFIG: MediaKitConfig = {
         "60-90s slot inside a channel video. Genuine on-screen pitch.",
       format: "60-90s dentro de um vídeo",
       formatEN: "60-90s inside a video",
-      priceUSD: 1100,
+      priceUSD: 1200,
     },
     {
       name: "Vídeo vertical",
@@ -105,7 +105,7 @@ export const CONFIG: MediaKitConfig = {
         "Short vertical content for an Instagram Reel or YouTube Short — brand woven into the natural feed.",
       format: "Reel ou Short até 60s",
       formatEN: "Reel or Short up to 60s",
-      priceUSD: 300,
+      priceUSD: 600,
     },
   ],
   // Brands that have sponsored a video. Order = priority shown in the
