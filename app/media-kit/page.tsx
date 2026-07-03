@@ -29,7 +29,6 @@ import {
 import {
   CONFIG,
   localizedField,
-  USD_TO_BRL,
   type Locale,
   type Service,
   type SponsorEntry,
@@ -1506,59 +1505,11 @@ function Services({
                 {localizedField(s, "format", locale)}
               </dd>
             </div>
-            <ServicePrice service={s} locale={locale} t={t} />
           </dl>
         </article>
       ))}
     </div>
   );
-}
-
-// Single-currency price for a service. Uses canonical value when set in that
-// currency, otherwise converts at USD_TO_BRL. Rounded to a tidy magnitude.
-function ServicePrice({
-  service,
-  locale,
-  t,
-}: {
-  service: Service;
-  locale: Locale;
-  t: T;
-}) {
-  const { priceBRL, priceUSD } = service;
-  if (priceBRL === undefined && priceUSD === undefined) return null;
-
-  let value: number;
-  let prefix: string;
-  if (locale === "en") {
-    value = priceUSD ?? (priceBRL ?? 0) / USD_TO_BRL;
-    prefix = "US$";
-  } else {
-    value = priceBRL ?? (priceUSD ?? 0) * USD_TO_BRL;
-    prefix = "R$";
-  }
-  const rounded = roundTidy(value);
-
-  return (
-    <div className="flex items-baseline justify-between gap-3 pt-1">
-      <dt className="text-faint">{t("service.priceFrom")}</dt>
-      <dd className="text-truffle">
-        {prefix} {fmtPrice(rounded, locale)}
-      </dd>
-    </div>
-  );
-}
-
-// Round to a "nice" magnitude based on size — 50, 100, 500, 1000.
-function roundTidy(n: number): number {
-  if (n < 500) return Math.round(n / 50) * 50;
-  if (n < 5_000) return Math.round(n / 100) * 100;
-  if (n < 50_000) return Math.round(n / 500) * 500;
-  return Math.round(n / 1_000) * 1_000;
-}
-
-function fmtPrice(n: number, locale: Locale): string {
-  return n.toLocaleString(locale === "en" ? "en-US" : "pt-BR");
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

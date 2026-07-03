@@ -172,11 +172,30 @@ export default async function Home() {
                   Generate Thumb
                 </span>
               </a>
+              <a
+                href="https://kernel-ai.replit.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
+              >
+                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
+                  <Image
+                    src="/kernelai.png"
+                    alt="KernelAI"
+                    width={32}
+                    height={32}
+                    className="rounded"
+                  />
+                </span>
+                <span className="text-xs font-medium text-blue-fantastic/70 dark:text-palladian/70 group-hover:text-truffle-trouble dark:group-hover:text-burning-flame transition-colors text-center">
+                  KernelAI
+                </span>
+              </a>
             </div>
             <p className="text-sm sm:text-base text-center">
               E crio conteúdo sobre minha história:
             </p>
-            <div className="flex items-start justify-center gap-2 sm:gap-6">
+            <div className="flex items-start justify-center gap-4 sm:gap-6">
               <a
                 href="https://youtube.com/@yudiganeko"
                 target="_blank"
@@ -237,21 +256,32 @@ export default async function Home() {
                 </span>
               </a>
             </div>
-          </div>
-          <div className="mt-8 sm:mt-12 animate-bounce">
-            <svg
-              className="w-5 h-5 sm:w-6 sm:h-6 text-blue-fantastic/40 dark:text-palladian/40"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            <p className="text-center text-xs sm:text-sm text-blue-fantastic/60 dark:text-palladian/60">
+              Também faço{" "}
+              <a
+                href="/mentoria"
+                className="text-truffle-trouble dark:text-burning-flame underline underline-offset-4 decoration-truffle-trouble/40 dark:decoration-burning-flame/40 hover:decoration-truffle-trouble dark:hover:decoration-burning-flame transition-colors"
+              >
+                mentoria de criação de conteúdo para profissionais tech
+              </a>{" "}
+              <Image
+                src="/youtube.svg"
+                alt="YouTube"
+                width={18}
+                height={18}
+                className="inline-block align-text-bottom"
               />
-            </svg>
+            </p>
+            <p className="text-center text-xs sm:text-sm text-blue-fantastic/60 dark:text-palladian/60">
+              Para parcerias:{" "}
+              <a
+                href="/media-kit"
+                className="text-truffle-trouble dark:text-burning-flame underline underline-offset-4 decoration-truffle-trouble/40 dark:decoration-burning-flame/40 hover:decoration-truffle-trouble dark:hover:decoration-burning-flame transition-colors"
+              >
+                meu media-kit
+              </a>{" "}
+              🤝
+            </p>
           </div>
         </div>
         <h1 className="text-left font-bold text-2xl text-blue-fantastic dark:text-palladian">Sobre mim:</h1>
