@@ -273,7 +273,7 @@ export default async function Home() {
               />
             </p>
             <p className="text-center text-xs sm:text-sm text-blue-fantastic/60 dark:text-palladian/60">
-              Meus{" "}
+              E distribuo{" "}
               <a
                 href="/download"
                 className="text-truffle-trouble dark:text-burning-flame underline underline-offset-4 decoration-truffle-trouble/40 dark:decoration-burning-flame/40 hover:decoration-truffle-trouble dark:hover:decoration-burning-flame transition-colors"
