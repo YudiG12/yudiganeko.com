@@ -4,7 +4,7 @@
 //
 // Requer:
 //   INSTAGRAM_ACCESS_TOKEN — token long-lived (60 dias) gerado por
-//                            scripts/auth-instagram.ts
+//                            scripts/instagram-token.mjs (veja MEDIA_KIT.md)
 //
 // Cache de 1h por request. Tudo retorna null se faltar o token.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -65,7 +65,15 @@ async function ig<T>(
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
   url.searchParams.set("access_token", t);
   const res = await fetch(url, { next: { revalidate: REVALIDATE } });
-  if (!res.ok) return null;
+  if (!res.ok) {
+    // Every fetcher funnels through here, so an expired 60-day token reads as
+    // "not connected" in the UI with nothing in the logs unless we say so.
+    const err = await res.text().catch(() => "<unreadable>");
+    console.error(
+      `[media-kit/instagram] ${path} failed ${res.status}: ${err.slice(0, 500)}`,
+    );
+    return null;
+  }
   return (await res.json()) as T;
 }
 
@@ -206,9 +214,13 @@ export async function fetchIGDemographics(): Promise<IGDemographics | null> {
 
   // Sort age buckets in natural order (13-17 → 65+), and keep gender as F, M, U.
   // Country/city stay sorted by count (top first).
-  const ageSorted = [...age].sort(
-    (a, b) => ageOrder(a.key) - ageOrder(b.key),
-  );
+  //
+  // The age breakdown also carries a "U" (unknown) row, which is a gender key
+  // leaking into the age dimension — it renders as a stray bucket on an axis
+  // where it means nothing, so drop anything that is not a real age range.
+  const ageSorted = [...age]
+    .filter((r) => AGE_ORDER.includes(r.key))
+    .sort((a, b) => ageOrder(a.key) - ageOrder(b.key));
   const genderSorted = [...gender].sort(
     (a, b) => GENDER_ORDER.indexOf(a.key) - GENDER_ORDER.indexOf(b.key),
   );
@@ -250,7 +262,7 @@ export async function fetchIGEngagement(): Promise<IGEngagement | null> {
   };
 }
 
-const AGE_ORDER = ["13-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+", "65-"];
+const AGE_ORDER = ["13-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"];
 function ageOrder(b: string): number {
   const i = AGE_ORDER.indexOf(b);
   return i < 0 ? 99 : i;

@@ -17,6 +17,15 @@ const DATA_API = "https://youtube.googleapis.com/youtube/v3";
 const ANALYTICS_API = "https://youtubeanalytics.googleapis.com/v2";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
 
+// A failed fetch here is indistinguishable from an unconfigured env var once
+// the fetcher returns null, so surface the status and Google's error body —
+// expired refresh tokens and revoked consent both show up here first.
+async function logFail(label: string, res: Response): Promise<null> {
+  const body = await res.text().catch(() => "<unreadable>");
+  console.error(`[media-kit/youtube] ${label} failed ${res.status}: ${body.slice(0, 500)}`);
+  return null;
+}
+
 export type YTStats = {
   channelId: string;
   title: string;
@@ -71,7 +80,7 @@ export async function fetchChannelStats(): Promise<YTStats | null> {
   url.searchParams.set("key", key);
 
   const res = await fetch(url, { next: { revalidate: REVALIDATE } });
-  if (!res.ok) return null;
+  if (!res.ok) return logFail("channels", res);
   const data = await res.json();
   const item = data.items?.[0];
   if (!item) return null;
@@ -102,7 +111,10 @@ export async function fetchTopVideos(limit = 6): Promise<YTVideo[]> {
   chUrl.searchParams.set("id", channelId);
   chUrl.searchParams.set("key", key);
   const chRes = await fetch(chUrl, { next: { revalidate: REVALIDATE } });
-  if (!chRes.ok) return [];
+  if (!chRes.ok) {
+    await logFail("channels(contentDetails)", chRes);
+    return [];
+  }
   const ch = await chRes.json();
   const uploadsId: string | undefined =
     ch.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
@@ -115,7 +127,10 @@ export async function fetchTopVideos(limit = 6): Promise<YTVideo[]> {
   plUrl.searchParams.set("maxResults", "50");
   plUrl.searchParams.set("key", key);
   const plRes = await fetch(plUrl, { next: { revalidate: REVALIDATE } });
-  if (!plRes.ok) return [];
+  if (!plRes.ok) {
+    await logFail("playlistItems", plRes);
+    return [];
+  }
   const pl = await plRes.json();
   const ids: string[] = (pl.items ?? [])
     .map((i: { contentDetails?: { videoId?: string } }) => i.contentDetails?.videoId)
@@ -128,7 +143,10 @@ export async function fetchTopVideos(limit = 6): Promise<YTVideo[]> {
   vUrl.searchParams.set("id", ids.join(","));
   vUrl.searchParams.set("key", key);
   const vRes = await fetch(vUrl, { next: { revalidate: REVALIDATE } });
-  if (!vRes.ok) return [];
+  if (!vRes.ok) {
+    await logFail("videos", vRes);
+    return [];
+  }
   const v = await vRes.json();
 
   const videos: YTVideo[] = (v.items ?? []).map(
@@ -193,7 +211,7 @@ async function getAnalyticsAccessToken(): Promise<string | null> {
     body,
     next: { revalidate: REVALIDATE },
   });
-  if (!res.ok) return null;
+  if (!res.ok) return logFail("oauth/token (refresh)", res);
   const data = await res.json();
   return data.access_token ?? null;
 }
@@ -228,7 +246,7 @@ async function queryAnalytics(
     headers: { Authorization: `Bearer ${token}` },
     next: { revalidate: REVALIDATE },
   });
-  if (!res.ok) return null;
+  if (!res.ok) return logFail(`analytics(${dimensions})`, res);
   return (await res.json()) as {
     columnHeaders: { name: string }[];
     rows: (string | number)[][];
@@ -263,8 +281,10 @@ export async function fetchDemographics(): Promise<YTDemographics | null> {
 
   const age = Array.from(ageMap.entries())
     .map(([bucket, share]) => ({
-      // analytics gives "age25-34" → "25-34"
-      bucket: bucket.replace(/^age/, ""),
+      // analytics gives "age25-34" → "25-34". Its open-ended top bucket comes
+      // back as "age65-", which reads as a truncated range; "65+" is both what
+      // it means and what Instagram returns, so the two panels agree.
+      bucket: bucket.replace(/^age/, "").replace(/^65-$/, "65+"),
       share: round1(share),
     }))
     .sort((a, b) => ageOrder(a.bucket) - ageOrder(b.bucket));
@@ -303,7 +323,7 @@ const AGE_ORDER = [
   "35-44",
   "45-54",
   "55-64",
-  "65-",
+  "65+",
 ];
 function ageOrder(b: string): number {
   const i = AGE_ORDER.indexOf(b);
@@ -331,7 +351,7 @@ export async function fetchYTEngagement(): Promise<YTEngagement | null> {
     headers: { Authorization: `Bearer ${token}` },
     next: { revalidate: REVALIDATE },
   });
-  if (!res.ok) return null;
+  if (!res.ok) return logFail("analytics(engagement)", res);
 
   const data = (await res.json()) as {
     columnHeaders: { name: string }[];
