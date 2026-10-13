@@ -10,7 +10,7 @@
   --truffle-trouble: #a35139;
   --abyssal: #1b2632;
 
-  --background: var(--palladian);
+  --background: #ffffff;
   --foreground: var(--blue-fantastic);
   --body-color: var(--blue-fantastic);
   --surface: #f4f0e8;
@@ -141,4 +141,36 @@ body {
     #000 93%,
     transparent
   );
+}
+
+/* Lightbox das fotos de experiência */
+@keyframes lightbox-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes lightbox-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.animate-lightbox-fade {
+  animation: lightbox-fade 0.25s ease-out both;
+}
+.animate-lightbox-zoom {
+  animation: lightbox-zoom 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-lightbox-fade,
+  .animate-lightbox-zoom {
+    animation: none;
+  }
 }

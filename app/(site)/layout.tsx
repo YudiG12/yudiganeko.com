@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-// Site-wide chrome: home logo top-left. Theme toggle lives in the root
-// layout so it shows on every route (including /media-kit).
+// Site-wide chrome: home logo top-left.
 export default function SiteLayout({
   children,
 }: Readonly<{
@@ -13,7 +12,7 @@ export default function SiteLayout({
       <Link
         href="/"
         aria-label="Yudi Ganeko"
-        className="fixed top-4 left-4 z-50 block transition-opacity hover:opacity-80"
+        className="absolute sm:fixed top-4 left-4 z-50 block transition-opacity hover:opacity-80"
       >
         <Image
           src="/logo.png"

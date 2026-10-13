@@ -1,303 +1,175 @@
 import Image from "next/image";
+import CompanyName from "./company-name";
 import ExperienceList from "./experiences";
 import NameAnimation from "./name-animation";
+import RoadmapEmbed from "./roadmap-embed";
+import TiltImage from "./tilt-image";
 
-async function getYoutubeSubscribers(): Promise<number | null> {
-  const apiKey = process.env.YOUTUBE_API_KEY;
-  if (!apiKey) return null;
+// Em dev aponta pro roadmap rodando local (`next dev -p 3001` no repo ganeko-roadmap).
+const ROADMAP_URL =
+  process.env.NODE_ENV === "development" ? "http://localhost:3001" : "https://ganeko-roadmap.vercel.app";
 
-  try {
-    const res = await fetch(
-      `https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=@yudiganeko&key=${apiKey}`,
-      { next: { revalidate: 3600 } }
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    const count = data?.items?.[0]?.statistics?.subscriberCount;
-    return count ? Number(count) : null;
-  } catch {
-    return null;
-  }
-}
+const studyResources = [
+  {
+    name: "CODERS",
+    href: "https://radar.coders.com.br/l/m7hrnk",
+    logo: "/partners/coders.png",
+    description: "Pra conquistar meu próximo emprego em dólar.",
+  },
+  {
+    name: "curso.dev",
+    href: "https://hotm.io/deschamps",
+    logo: "/partners/curso-dev.png",
+    description: "Onde estou estudando programação.",
+  },
+];
 
-function formatCount(n: number): string {
-  const truncated = Math.floor(n / 10) * 10;
-  if (truncated >= 1_000) {
-    return `+${(truncated / 1_000).toString().replace(".", ",")} mil`;
-  }
-  return `+${truncated}`;
-}
-
-export default async function Home() {
-  const youtubeSubscribers = await getYoutubeSubscribers();
-
+export default function Home() {
   return (
     <div className="font-mono tracking-wide grid items-center min-h-screen xl:px-60 lg:px-30 md:px-10 px-4 pb-10">
-      <main className="flex text-lg flex-col row-start-2">
+      <main className="flex text-lg flex-col row-start-2 min-w-0">
         {/* Apresentação + Links */}
-        <div className="flex min-h-screen text-lg flex-col row-start-2 items-center justify-center">
-          <div className="flex items-center gap-3 sm:gap-5">
-            <Image
-              className="rounded-full object-cover shrink-0 w-14 h-14 sm:w-20 sm:h-20 ring-2 ring-burning-flame/70 ring-offset-2 ring-offset-palladian dark:ring-offset-abyssal"
+        <div className="flex min-h-screen text-lg flex-col lg:flex-row row-start-2 items-center justify-center gap-8 lg:gap-14 xl:-mx-32 pt-16 sm:pt-20 lg:pt-0">
+          <div className="flex shrink-0 flex-row sm:flex-col items-center gap-4 sm:gap-6">
+            <TiltImage
+              className="rounded-2xl sm:rounded-3xl object-cover w-24 sm:w-80 lg:w-72 xl:w-80 aspect-[4/5] shadow-md sm:shadow-xl"
               alt="Yudi Ganeko"
-              src="/profile.png"
-              width={80}
-              height={80}
+              src="/hero-portrait.jpg"
+              width={880}
+              height={1100}
+              sizes="(max-width: 640px) 96px, 320px"
+              priority
             />
-            <div className="flex flex-col gap-0.5 sm:gap-1 min-w-0">
+            <div className="flex flex-col items-start sm:items-center gap-0.5 sm:gap-1 text-left sm:text-center">
               <span className="text-xs sm:text-sm">Oi! Eu sou o</span>
-              <h1 className="text-lg sm:text-3xl min-h-[1.5rem] sm:min-h-[2.5rem] whitespace-nowrap">
+              <h1 className="text-xl sm:text-3xl min-h-[1.75rem] sm:min-h-[2.5rem] whitespace-nowrap">
                 <NameAnimation />
               </h1>
+              <span className="text-xs sm:text-sm text-blue-fantastic/70 dark:text-palladian/70">
+                dev há 8 anos 👨‍💻
+              </span>
             </div>
           </div>
-          <div className="mt-8 sm:mt-16 w-full max-w-3xl px-0 sm:px-4 flex flex-col gap-6 sm:gap-10">
-            <p className="text-sm sm:text-base text-center leading-7 sm:leading-8">
-              Já trabalhei pro{" "}
-              <span className="text-red-600 dark:text-red-500 whitespace-nowrap">
-                <Image
-                  src="/ifood.svg"
-                  alt=""
-                  width={18}
-                  height={18}
-                  className="inline-block align-text-bottom mr-1"
-                />
-                iFood
-              </span>
-              ,{" "}
-              <span className="text-green-700 dark:text-green-500 whitespace-nowrap">
-                <Image
-                  src="/boticario.jpeg"
-                  alt=""
-                  width={18}
-                  height={18}
-                  className="inline-block align-middle mr-1 -mt-0.5 rounded"
-                />
-                Boticário
-              </span>
-              ,{" "}
-              <span className="text-truffle-trouble dark:text-burning-flame whitespace-nowrap">
-                <svg
-                  viewBox="0 0 32 32"
-                  width={22}
-                  height={22}
-                  className="inline-block align-middle mr-1 -mt-0.5"
-                  fill="currentColor"
-                  aria-hidden="true"
+          <div className="flex flex-col items-center w-full max-w-3xl min-w-0">
+            <div className="w-full px-0 sm:px-4 flex flex-col gap-6 sm:gap-10">
+              <div className="flex flex-col gap-1 sm:gap-2">
+                <p className="text-sm sm:text-base xl:text-[15px] xl:whitespace-nowrap text-center leading-7 sm:leading-8">
+                  Já trabalhei pro{" "}
+                  <CompanyName company="iFood" />,{" "}
+                  <CompanyName company="Boticário" />,{" "}
+                  <CompanyName company="C6 Bank" /> e{" "}
+                  <CompanyName company="Revolut" />
+                  .
+                </p>
+              </div>
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-col">
+                  <p className="text-sm sm:text-base text-center leading-7 sm:leading-8">
+                    Hoje, estou em busca do{" "}
+                    <strong className="font-semibold text-truffle-trouble">
+                      meu próximo emprego <span className="whitespace-nowrap">em dólar 💵</span>
+                    </strong>
+                    ,
+                  </p>
+                  <p className="text-sm sm:text-base text-center leading-7 sm:leading-8">
+                    documentando essa jornada no:
+                  </p>
+                </div>
+                <a
+                  href="https://www.youtube.com/watch?v=EFaZ7lpD6zw"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block w-full max-w-md"
                 >
-                  <text
-                    x="16"
-                    y="23"
-                    textAnchor="middle"
-                    fontFamily="system-ui, sans-serif"
-                    fontSize="20"
-                    fontWeight="900"
-                  >
-                    C6
-                  </text>
-                </svg>
-                C6 Bank
-              </span>{" "}
-              e{" "}
-              <span className="text-gray-900 dark:text-gray-100 whitespace-nowrap">
-                <Image
-                  src="/revolut.svg"
-                  alt=""
-                  width={14}
-                  height={14}
-                  className="inline-block align-middle mr-1 -mt-0.5 dark:invert"
-                />
-                Revolut 🇪🇺
-              </span>
-              .
-            </p>
-            <p className="text-sm sm:text-base text-center">
-              Hoje, crio sites e apps:
-            </p>
-            <div className="flex items-start justify-center gap-2 sm:gap-6">
-              <a
-                href="https://www.oquegastei.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
-              >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
-                  <Image
-                    src="/oquegastei.svg"
-                    alt="O Que Gastei"
-                    width={32}
-                    height={32}
-                    className="rounded"
-                  />
-                </span>
-                <span className="text-xs font-medium text-blue-fantastic/70 dark:text-palladian/70 group-hover:text-truffle-trouble dark:group-hover:text-burning-flame transition-colors text-center">
-                  O Que Gastei
-                </span>
-              </a>
-              <a
-                href="https://www.salariodev.com.br"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
-              >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
-                  <Image
-                    src="/salariodev.svg"
-                    alt="SalárioDev"
-                    width={32}
-                    height={32}
-                    className="rounded"
-                  />
-                </span>
-                <span className="text-xs font-medium text-blue-fantastic/70 dark:text-palladian/70 group-hover:text-truffle-trouble dark:group-hover:text-burning-flame transition-colors text-center">
-                  SalárioDev
-                </span>
-              </a>
-              <a
-                href="https://www.generatethumb.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
-              >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
-                  <Image
-                    src="/generatethumb.svg"
-                    alt="Generate Thumb"
-                    width={32}
-                    height={32}
-                    className="rounded"
-                  />
-                </span>
-                <span className="text-xs font-medium text-blue-fantastic/70 dark:text-palladian/70 group-hover:text-truffle-trouble dark:group-hover:text-burning-flame transition-colors text-center">
-                  Generate Thumb
-                </span>
-              </a>
-              <a
-                href="https://kernel-ai.replit.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
-              >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
-                  <Image
-                    src="/kernelai.png"
-                    alt="KernelAI"
-                    width={32}
-                    height={32}
-                    className="rounded"
-                  />
-                </span>
-                <span className="text-xs font-medium text-blue-fantastic/70 dark:text-palladian/70 group-hover:text-truffle-trouble dark:group-hover:text-burning-flame transition-colors text-center">
-                  KernelAI
-                </span>
-              </a>
-            </div>
-            <p className="text-sm sm:text-base text-center">
-              E crio conteúdo sobre minha história:
-            </p>
-            <div className="flex items-start justify-center gap-4 sm:gap-6">
-              <a
-                href="https://youtube.com/@yudiganeko"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="YouTube"
-                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
-              >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
-                  <Image
-                    src="/youtube.svg"
-                    alt="YouTube"
-                    width={28}
-                    height={28}
-                  />
-                </span>
-                {youtubeSubscribers !== null && (
-                  <span className="text-xs text-blue-fantastic/60 dark:text-palladian/60 text-center">
-                    {formatCount(youtubeSubscribers)} inscritos
+                  <span className="relative block aspect-video overflow-hidden rounded-2xl shadow-lg ring-1 ring-oatmeal/60">
+                    <Image
+                      src="/youtube-thumb-2.jpg"
+                      alt=""
+                      fill
+                      sizes="(max-width: 640px) 100vw, 448px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/50 to-transparent px-4 pb-3 pt-10 text-left text-sm sm:text-base font-medium leading-snug text-white">
+                      COMO ESTOU ESTUDANDO PROGRAMAÇÃO DO ZERO (10 anos depois 😯)
+                    </span>
+                    <span className="absolute left-1/2 top-3 -translate-x-1/2 flex items-center gap-2 rounded-full bg-white/90 px-4 py-1.5 text-sm sm:text-base font-semibold text-blue-fantastic shadow-md backdrop-blur-sm">
+                      <Image src="/youtube.svg" alt="" width={24} height={24} />
+                      YouTube
+                    </span>
                   </span>
-                )}
-              </a>
-              <a
-                href="https://www.linkedin.com/in/lucas-yudi-ganeko-1ba3b3178"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="LinkedIn"
-                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
-              >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
-                  <Image
-                    src="/linkedin.svg"
-                    alt="LinkedIn"
-                    width={28}
-                    height={28}
-                  />
-                </span>
-                <span className="text-xs text-blue-fantastic/60 dark:text-palladian/60 text-center">
-                  +12 mil seguidores
-                </span>
-              </a>
-              <a
-                href="https://instagram.com/ganekoyudi"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Instagram"
-                className="flex flex-col items-center gap-2 sm:gap-3 w-16 sm:w-24 group"
-              >
-                <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl border border-oatmeal/60 dark:border-blue-fantastic bg-palladian/60 dark:bg-blue-fantastic/40 group-hover:bg-oatmeal/40 dark:group-hover:bg-blue-fantastic/70 group-hover:border-burning-flame dark:group-hover:border-burning-flame transition-all duration-300">
-                  <Image
-                    src="/instagram.svg"
-                    alt="Instagram"
-                    width={28}
-                    height={28}
-                  />
-                </span>
-                <span className="text-xs text-blue-fantastic/60 dark:text-palladian/60 text-center">
-                  +40 mil seguidores
-                </span>
-              </a>
+                </a>
+                <p className="text-center text-xs sm:text-sm text-blue-fantastic/70">
+                  E também no{" "}
+                  <a
+                    href="https://instagram.com/ganekoyudi"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 align-middle font-medium text-truffle-trouble underline underline-offset-4 decoration-truffle-trouble/40 hover:decoration-truffle-trouble transition-colors"
+                  >
+                    <Image src="/instagram.svg" alt="" width={16} height={16} />
+                    Instagram
+                  </a>{" "}
+                  e{" "}
+                  <a
+                    href="https://www.linkedin.com/in/lucas-yudi-ganeko-1ba3b3178"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 align-middle font-medium text-truffle-trouble underline underline-offset-4 decoration-truffle-trouble/40 hover:decoration-truffle-trouble transition-colors"
+                  >
+                    <Image src="/linkedin.svg" alt="" width={16} height={16} />
+                    LinkedIn
+                  </a>
+                </p>
+              </div>
             </div>
-            <p className="text-center text-xs sm:text-sm text-blue-fantastic/60 dark:text-palladian/60">
-              Também faço{" "}
-              <a
-                href="/mentoria"
-                className="text-truffle-trouble dark:text-burning-flame underline underline-offset-4 decoration-truffle-trouble/40 dark:decoration-burning-flame/40 hover:decoration-truffle-trouble dark:hover:decoration-burning-flame transition-colors"
-              >
-                mentoria de criação de conteúdo para profissionais tech
-              </a>{" "}
-              <Image
-                src="/youtube.svg"
-                alt="YouTube"
-                width={18}
-                height={18}
-                className="inline-block align-text-bottom"
-              />
-            </p>
-            <p className="text-center text-xs sm:text-sm text-blue-fantastic/60 dark:text-palladian/60">
-              E distribuo{" "}
-              <a
-                href="/download"
-                className="text-truffle-trouble dark:text-burning-flame underline underline-offset-4 decoration-truffle-trouble/40 dark:decoration-burning-flame/40 hover:decoration-truffle-trouble dark:hover:decoration-burning-flame transition-colors"
-              >
-                materiais gratuitos
-              </a>{" "}
-              🗂️
-            </p>
-            <p className="text-center text-xs sm:text-sm text-blue-fantastic/60 dark:text-palladian/60">
-              Para parcerias:{" "}
-              <a
-                href="/media-kit"
-                className="text-truffle-trouble dark:text-burning-flame underline underline-offset-4 decoration-truffle-trouble/40 dark:decoration-burning-flame/40 hover:decoration-truffle-trouble dark:hover:decoration-burning-flame transition-colors"
-              >
-                meu media-kit
-              </a>{" "}
-              🤝
-            </p>
           </div>
         </div>
+        <section id="roadmap" className="mt-16 lg:mt-0 mb-20 scroll-mt-10 text-center">
+          <h2 className="font-bold text-2xl text-blue-fantastic">Meu roadmap de estudos</h2>
+          <p className="mt-2 mb-8 text-sm sm:text-base text-blue-fantastic/70">
+            Tudo o que estou estudando pra entrevistas de backend com Java.
+          </p>
+          <RoadmapEmbed baseUrl={ROADMAP_URL} />
+        </section>
+        <section id="como-estudo" className="mb-20 scroll-mt-10 text-center">
+          <h2 className="font-bold text-2xl text-blue-fantastic">Como estou estudando</h2>
+          <p className="mt-2 mb-8 text-sm sm:text-base text-blue-fantastic/70">
+            O que estou usando pra me realocar no mercado.
+          </p>
+          <ul className="grid gap-4 sm:grid-cols-2 text-left">
+            {studyResources.map((r) => (
+              <li key={r.href}>
+                <a
+                  href={r.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex h-full flex-col gap-2 rounded-2xl bg-white p-5 ring-1 ring-oatmeal/60 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:ring-oatmeal"
+                >
+                  <Image
+                    src={r.logo}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="h-10 w-10 rounded-lg ring-1 ring-oatmeal/60"
+                  />
+                  <span className="text-base font-semibold text-blue-fantastic group-hover:text-truffle-trouble transition-colors">
+                    {r.name} <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                  </span>
+                  <span className="text-sm leading-6 text-blue-fantastic/70">{r.description}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 text-xs sm:text-sm leading-6 text-blue-fantastic/60">
+            Sou cliente de <strong className="font-semibold">todos</strong>: paguei,
+            consumi e gostei, antes mesmo de ter meu canal. Sinceramente, na minha opinião, são os melhores em cada um
+            dos seus nichos.
+          </p>
+        </section>
         <h1 className="text-left font-bold text-2xl text-blue-fantastic dark:text-palladian">Sobre mim:</h1>
         <div className="flex flex-col sm:flex-row mb-10 items-center sm:items-start">
           <p className="my-10 leading-7 sm:mr-15 text-base text-left">
-            Tenho 7 anos de experiência profissional como{" "}
+            Tenho 8 anos de experiência profissional como{" "}
             <span className="text-truffle-trouble dark:text-burning-flame font-medium"> Engenheiro de Software</span>
             , trabalhando para empresas multibilionárias e pro exterior.
             <br />
@@ -309,13 +181,8 @@ export default async function Home() {
             Nascido e crescido em São Paulo, sou descendente de
             <span className="text-truffle-trouble dark:text-burning-flame font-medium"> Okinawa, Japão</span>
             🇯🇵.
-            <br />
-            <br />
-            Estou numa jornada de criar meus
-            <span className="text-truffle-trouble dark:text-burning-flame font-medium"> próprios produtos </span>
-            na internet. 🚀
           </p>
-          <Image
+          <TiltImage
             className="rounded-lg object-cover"
             alt="Yudi Ganeko"
             src="/yudi.png"
@@ -323,7 +190,7 @@ export default async function Home() {
             height={200}
           />
         </div>
-        <h1 className="text-left mb-10 font-bold text-2xl text-blue-fantastic dark:text-palladian">
+        <h1 id="experiencia" className="text-left mb-10 font-bold text-2xl text-blue-fantastic dark:text-palladian scroll-mt-10">
           Minha experiência:
         </h1>
         <ExperienceList />

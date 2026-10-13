@@ -1,10 +1,30 @@
-"use client";
+import CompanyName, { type Company } from "./company-name";
+import PhotoGallery, { type Photo } from "./photo-gallery";
 
-import { useState } from "react";
+const c6Photos = [
+  { src: "/experiences/c6.jpg", width: 1400, height: 1040 },
+  { src: "/experiences/c6-3.jpg", width: 787, height: 1400 },
+  { src: "/experiences/c6-4.jpg", width: 1050, height: 1400 },
+  { src: "/experiences/c6-5.jpg", width: 787, height: 1400 },
+];
 
-const experiences = [
+type Experience = {
+  company: string;
+  brand?: Company;
+  team?: string;
+  photos?: Photo[];
+  role: string;
+  period: string;
+  highlights: string[];
+};
+
+const experiences: Experience[] = [
   {
     company: "Revolut",
+    photos: [
+      { src: "/experiences/revolut.jpg", width: 788, height: 1400 },
+      { src: "/experiences/revolut-2.jpg", width: 1400, height: 821 },
+    ],
     role: "Software Engineer",
     period: "ABR 2025 - SET 2025",
     highlights: [
@@ -13,7 +33,13 @@ const experiences = [
     ],
   },
   {
-    company: "IFood",
+    company: "iFood",
+    photos: [
+      { src: "/experiences/ifood.jpg", width: 1400, height: 788 },
+      { src: "/experiences/ifood-2.jpg", width: 788, height: 1400 },
+      { src: "/experiences/ifood-3.jpg", width: 788, height: 1400 },
+      { src: "/experiences/ifood-4.jpg", width: 788, height: 1400 },
+    ],
     role: "Software Engineer",
     period: "NOV 2024 - ABR 2025",
     highlights: [
@@ -24,6 +50,13 @@ const experiences = [
   },
   {
     company: "Grupo Boticário",
+    brand: "Boticário",
+    photos: [
+      { src: "/experiences/boticario-1.jpg", width: 788, height: 1400 },
+      { src: "/experiences/boticario-2.jpg", width: 1050, height: 1400 },
+      { src: "/experiences/boticario-3.jpg", width: 788, height: 1400 },
+      { src: "/experiences/boticario-4.jpg", width: 788, height: 1400 },
+    ],
     role: "Software Engineer",
     period: "MAR 2023 - NOV 2024",
     highlights: [
@@ -37,6 +70,7 @@ const experiences = [
   },
   {
     company: "C6 Bank",
+    photos: c6Photos,
     role: "Software Engineer",
     period: "JAN 2022 - MAR 2023",
     highlights: [
@@ -46,8 +80,9 @@ const experiences = [
     ],
   },
   {
-    company: "C6 Bank (Data Team)",
+    company: "C6 Bank",
     role: "Data Engineer",
+    team: "Time de Dados",
     period: "JAN 2019 - JAN 2022",
     highlights: [
       "Arquitetei e desenvolvi soluções cloud-native utilizando diversos serviços da GCP.",
@@ -62,45 +97,83 @@ const experiences = [
   },
 ];
 
-export default function ExperienceList() {
-  const [selected, setSelected] = useState(0);
+// Agrupa cargos consecutivos na mesma empresa (ex: C6 Bank) num único bloco.
+const companies = experiences.reduce<{ company: string; brand: Company; photos: Photo[]; roles: Experience[] }[]>(
+  (groups, exp) => {
+    const last = groups[groups.length - 1];
+    if (last?.company === exp.company) last.roles.push(exp);
+    else
+      groups.push({
+        company: exp.company,
+        brand: exp.brand ?? (exp.company as Company),
+        photos: exp.photos ?? [],
+        roles: [exp],
+      });
+    return groups;
+  },
+  []
+);
 
+export default function ExperienceList() {
   return (
-    <div className="flex flex-col sm:flex-row">
-      <ul className="flex flex-col py-8 px-2">
-        {experiences.map((exp, idx) => (
-          <li
-            key={exp.company}
-            className={`text-base cursor-pointer px-4 py-2 mb-2 transition-all
-              ${
-                selected === idx
-                  ? "text-truffle-trouble dark:text-burning-flame border-l-2 border-burning-flame bg-oatmeal/25 dark:bg-blue-fantastic/50"
-                  : "text-blue-fantastic/60 dark:text-palladian/60 hover:text-truffle-trouble dark:hover:text-burning-flame"
-              }
-            `}
-            onClick={() => setSelected(idx)}
-          >
-            {exp.company}
-          </li>
-        ))}
-      </ul>
-      <div className="flex-1 p-8">
-        <h2 className="text-2xl font-bold text-blue-fantastic dark:text-palladian mb-1">
-          {experiences[selected].role}{" "}
-          <span className="text-truffle-trouble dark:text-burning-flame">
-            @ {experiences[selected].company}
-          </span>
-        </h2>
-        <div className="text-blue-fantastic/60 dark:text-palladian/60 mb-6">{experiences[selected].period}</div>
-        <ul className="text-sm leading-7 space-y-4">
-          {experiences[selected].highlights.map((item, i) => (
-            <li key={i} className="flex items-start text-blue-fantastic/80 dark:text-palladian/80">
-              <span className="text-burning-flame mr-3">▸</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <ol className="relative flex flex-col">
+      {companies.map(({ company, brand, photos, roles }) => (
+        <li
+          key={company}
+          className="group relative grid gap-4 md:grid-cols-[14rem_1fr] md:gap-10 border-l-2 md:border-l-0 border-oatmeal/60 dark:border-blue-fantastic pl-6 sm:pl-8 md:pl-0 pb-14 md:pb-0 last:pb-0"
+        >
+          <span
+            aria-hidden="true"
+            className="md:hidden absolute -left-[7px] top-2.5 h-3 w-3 rounded-full bg-burning-flame ring-4 ring-white dark:ring-abyssal"
+          />
+          {/* Coluna da linha do tempo: fica fixa enquanto o bloco da empresa rola */}
+          <div className="md:text-right md:sticky md:top-24 md:self-start">
+            <h3 className="text-xl font-bold">
+              <CompanyName company={brand} label={company} />
+            </h3>
+            <div className="text-xs sm:text-sm text-blue-fantastic/60 dark:text-palladian/60 mt-1">
+              {roles[roles.length - 1].period.split(" - ")[0]} – {roles[0].period.split(" - ")[1]}
+            </div>
+          </div>
+
+          <div className="relative md:border-l-2 border-oatmeal/60 dark:border-blue-fantastic md:pl-8 md:pb-16 md:group-last:pb-0 min-w-0">
+            <span
+              aria-hidden="true"
+              className="hidden md:block absolute -left-[7px] top-2.5 h-3 w-3 rounded-full bg-burning-flame ring-4 ring-white dark:ring-abyssal"
+            />
+
+            {photos.length > 0 && (
+              <div className="mb-6">
+                <PhotoGallery photos={photos} alt={`Yudi na ${company}`} />
+              </div>
+            )}
+
+            <div className="flex flex-col gap-8">
+              {roles.map((exp) => (
+                <div key={exp.role + exp.period}>
+                  <h4 className="text-lg font-bold text-blue-fantastic dark:text-palladian">
+                    {exp.role}
+                    {exp.team && (
+                      <span className="font-normal text-blue-fantastic/60 dark:text-palladian/60"> · {exp.team}</span>
+                    )}
+                  </h4>
+                  <div className="text-xs sm:text-sm text-blue-fantastic/60 dark:text-palladian/60 mb-3">
+                    {exp.period}
+                  </div>
+                  <ul className="text-sm leading-7 space-y-3">
+                    {exp.highlights.map((item, i) => (
+                      <li key={i} className="flex items-start text-blue-fantastic/80 dark:text-palladian/80">
+                        <span className="text-burning-flame mr-3">▸</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }
