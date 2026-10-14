@@ -76,21 +76,21 @@ export default function Home() {
                   </p>
                 </div>
                 <a
-                  href="https://www.youtube.com/watch?v=EFaZ7lpD6zw"
+                  href="https://www.youtube.com/watch?v=E8pAURoUcIE&t=654s"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group block w-full max-w-md"
                 >
                   <span className="relative block aspect-video overflow-hidden rounded-2xl shadow-lg ring-1 ring-oatmeal/60">
                     <Image
-                      src="/youtube-thumb-2.jpg"
+                      src="/youtube-thumb-3.jpg"
                       alt=""
                       fill
                       sizes="(max-width: 640px) 100vw, 448px"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/50 to-transparent px-4 pb-3 pt-10 text-left text-sm sm:text-base font-medium leading-snug text-white">
-                      COMO ESTOU ESTUDANDO PROGRAMAÇÃO DO ZERO (10 anos depois 😯)
+                      ESTOU VOLTANDO pra CLT (deu tudo errado?)
                     </span>
                     <span className="absolute left-1/2 top-3 -translate-x-1/2 flex items-center gap-2 rounded-full bg-white/90 px-4 py-1.5 text-sm sm:text-base font-semibold text-blue-fantastic shadow-md backdrop-blur-sm">
                       <Image src="/youtube.svg" alt="" width={24} height={24} />
