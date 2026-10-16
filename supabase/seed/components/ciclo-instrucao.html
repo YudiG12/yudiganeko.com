@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600;700&family=Geist:wght@400;600&display=swap');
+  :root { --ink:#2c3b4d; --on:#e8892b; --muted:rgba(44,59,77,.6); --line:rgba(201,193,177,.55); }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Geist Mono',ui-monospace,monospace; color:var(--ink); }
+  .stage { position:relative; display:flex; flex-direction:column; align-items:center; gap:26px; padding:56px 20px 28px; }
+  .row { position:relative; display:flex; align-items:center; }
+  .st { display:flex; flex-direction:column; align-items:center; gap:8px; width:150px; }
+  .box { width:120px; height:64px; border-radius:14px; background:#fff; display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px;
+         box-shadow:inset 0 0 0 1.5px #c9c1b1; opacity:.5; transition:all .22s cubic-bezier(.34,1.56,.64,1); }
+  .st.done .box { box-shadow:inset 0 0 0 1.5px var(--ink); opacity:1; }
+  .st.now .box { background:#fff1e0; box-shadow:inset 0 0 0 2px var(--on),0 10px 22px -10px rgba(232,137,43,.6); opacity:1; font-weight:700; transform:scale(1.04); }
+  .num { font-size:11px; color:var(--muted); } .st.now .num { color:var(--on); font-weight:600; }
+  .check { color:#2f8a5b; display:none; } .st.done .check { display:inline; }
+  .link { width:36px; height:2px; background:#d8d2c4; transition:background .2s; } .link.done { background:var(--ink); } .link.now { background:var(--on); }
+  .token { position:absolute; top:-34px; left:0; padding:5px 10px; border-radius:8px; background:var(--ink); color:#fff; font-size:11px; white-space:nowrap;
+           box-shadow:0 8px 16px -6px rgba(44,59,77,.5); will-change:transform; }
+  .token b { color:#ffb162; }
+  .caption { display:flex; align-items:center; gap:10px; font-family:'Geist',system-ui; font-size:16px; min-height:28px; text-align:center; }
+  .caption .k { font-family:'Geist Mono',monospace; font-size:13px; color:var(--muted); }
+  .val { font-family:'Geist Mono',monospace; font-weight:700; color:var(--on); background:#fff1e0; padding:2px 8px; border-radius:6px; }
+  .controls { display:flex; align-items:center; gap:14px; padding:14px 18px; border-top:1px solid var(--line); }
+  button { border:0; background:none; cursor:pointer; color:var(--ink); }
+  .play { width:36px; height:36px; border-radius:999px; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:transform .12s; }
+  .play:active, .restart:active { transform:scale(.92); }
+  .restart { width:32px; height:32px; border-radius:999px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .restart:hover { background:#f9f7f4; }
+  input[type=range] { -webkit-appearance:none; appearance:none; flex:1; height:36px; background:transparent; cursor:pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height:4px; border-radius:999px; background:linear-gradient(to right,var(--ink) var(--p),#e3dccd var(--p)); }
+  input[type=range]::-moz-range-track { height:4px; border-radius:999px; background:linear-gradient(to right,var(--ink) var(--p),#e3dccd var(--p)); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; margin-top:-9px; border-radius:999px; background:#fff; box-shadow:0 0 0 2px var(--ink),0 4px 10px rgba(44,59,77,.3); transition:box-shadow .15s; }
+  input[type=range]:active::-webkit-slider-thumb { box-shadow:0 0 0 2px var(--ink),0 0 0 8px rgba(44,59,77,.1),0 4px 10px rgba(44,59,77,.3); }
+  input[type=range]::-moz-range-thumb { width:22px; height:22px; border:0; border-radius:999px; background:#fff; box-shadow:0 0 0 2px var(--ink),0 4px 10px rgba(44,59,77,.3); }
+  .time { font-size:12px; color:var(--muted); flex-shrink:0; font-variant-numeric:tabular-nums; }
+  @media (max-width:640px) { .st { width:78px } .box { width:72px; font-size:11px } .link { width:6px } .caption { font-size:14px; flex-wrap:wrap; justify-content:center } }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="row" id="row">
+    <div class="st" data-i="0"><div class="box"><span class="check">✓</span>Buscar</div><span class="num">1</span></div>
+    <div class="link" data-l="0"></div>
+    <div class="st" data-i="1"><div class="box"><span class="check">✓</span>Decodificar</div><span class="num">2</span></div>
+    <div class="link" data-l="1"></div>
+    <div class="st" data-i="2"><div class="box"><span class="check">✓</span>Executar</div><span class="num">3</span></div>
+    <div class="link" data-l="2"></div>
+    <div class="st" data-i="3"><div class="box"><span class="check">✓</span>Gravar</div><span class="num">4</span></div>
+    <div class="token" id="token"><b>ADD</b> R1, R2</div>
+  </div>
+  <div class="caption" aria-live="polite"><span class="k" id="k">etapa 1</span><span id="txt"></span></div>
+</div>
+<div class="controls">
+  <button class="play" id="play" aria-label="Pausar"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff" id="ico"><rect x="5" y="4" width="5" height="16" rx="1.5"/><rect x="14" y="4" width="5" height="16" rx="1.5"/></svg></button>
+  <button class="restart" id="restart" aria-label="Reiniciar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C3B4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></button>
+  <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Linha do tempo da instrução">
+  <span class="time" id="time">0,0 / 4 ciclos</span>
+</div>
+<script>
+  const STEPS = [
+    ['Buscar', 'A CPU lê a instrução <b class="val">ADD R1, R2</b> da memória.'],
+    ['Decodificar', 'A unidade de controle entende: “somar R1 com R2”.'],
+    ['Executar', 'A ULA soma 17 + 25 e o resultado é <span class="val">42</span>.'],
+    ['Gravar', 'O <span class="val">42</span> é guardado de volta em R1.'],
+  ];
+  const $ = (id) => document.getElementById(id);
+  const sts = [...document.querySelectorAll('.st')], links = [...document.querySelectorAll('.link')];
+  const scrub = $('scrub'), token = $('token');
+  let t = 0, playing = true, last = performance.now(), dragging = false, lastStep = -1;
+  const DURATION = 6000; // ms para os 4 ciclos
+  function render() {
+    t = Math.max(0, Math.min(1000, t));
+    const p = t / 1000, pos = p * 4, step = Math.max(0, Math.min(3, Math.floor(pos)));
+    sts.forEach((s, i) => { s.classList.toggle('done', i < step || p >= 1); s.classList.toggle('now', i === step && p < 1); });
+    links.forEach((l, i) => { l.classList.toggle('done', i < step - 1 || (i < step && p >= 1)); l.classList.toggle('now', i === step - 1 && p < 1); });
+    // Token anda exatamente com o slider (sem easing): centro da caixa atual → próxima.
+    const a = sts[step], b = sts[Math.min(3, step + 1)], f = Math.min(1, pos - step);
+    const ca = a.offsetLeft + a.offsetWidth / 2, cb = b.offsetLeft + b.offsetWidth / 2;
+    const x = ca + (cb - ca) * (step < 3 ? f : 0) - token.offsetWidth / 2;
+    token.style.transform = `translateX(${x}px)`;
+    if (step !== lastStep) { $('k').textContent = 'etapa ' + (step + 1); $('txt').innerHTML = STEPS[step][1]; lastStep = step; }
+    scrub.value = t; scrub.style.setProperty('--p', p * 100 + '%');
+    $('time').textContent = (pos).toFixed(1).replace('.', ',') + ' / 4 ciclos';
+  }
+  function loop(now) {
+    const dt = Math.max(0, now - last); last = now;
+    if (playing && !dragging) { t += dt / DURATION * 1000; if (t >= 1000) { t = 1000; setPlaying(false); } }
+    render(); requestAnimationFrame(loop);
+  }
+  function setPlaying(v) {
+    playing = v; $('play').setAttribute('aria-label', v ? 'Pausar' : 'Reproduzir');
+    $('ico').innerHTML = v ? '<rect x="5" y="4" width="5" height="16" rx="1.5"/><rect x="14" y="4" width="5" height="16" rx="1.5"/>' : '<path d="M7 4.5v15L19 12z"/>';
+  }
+  scrub.addEventListener('input', () => { t = +scrub.value; dragging = true; setPlaying(false); render(); });
+  scrub.addEventListener('change', () => { dragging = false; });
+  $('play').addEventListener('click', () => { if (t >= 1000) t = 0; setPlaying(!playing); });
+  $('restart').addEventListener('click', () => { t = 0; setPlaying(true); });
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(false);
+  requestAnimationFrame(loop);
+</script>
+</body>
+</html>

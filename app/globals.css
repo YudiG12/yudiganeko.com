@@ -174,3 +174,298 @@ body {
     animation: none;
   }
 }
+
+/* ────────────────────────────────────────────────────────────────────────
+   Ganeko Journal — blocos largos, código, animações. Tudo com prefixo gj-.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Imagens e interativos "amplos" saem da coluna de 720px e centralizam na viewport. */
+.gj-breakout {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  padding: 0 1rem;
+}
+
+.gj-no-scrollbar {
+  scrollbar-width: none;
+}
+.gj-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Syntax highlighting (lowlight/hljs) na paleta do site. */
+.gj-code .hljs-comment,
+.gj-code .hljs-quote {
+  color: rgba(249, 247, 244, 0.38);
+  font-style: italic;
+}
+.gj-code .hljs-keyword,
+.gj-code .hljs-selector-tag,
+.gj-code .hljs-type {
+  color: #f0a58f;
+}
+.gj-code .hljs-string,
+.gj-code .hljs-regexp,
+.gj-code .hljs-addition {
+  color: #9fcfa8;
+}
+.gj-code .hljs-number,
+.gj-code .hljs-literal,
+.gj-code .hljs-tag,
+.gj-code .hljs-name,
+.gj-code .hljs-symbol {
+  color: #ffb162;
+}
+.gj-code .hljs-title,
+.gj-code .hljs-title.function_,
+.gj-code .hljs-built_in,
+.gj-code .hljs-section {
+  color: #8ec5f0;
+}
+.gj-code .hljs-attr,
+.gj-code .hljs-attribute,
+.gj-code .hljs-meta,
+.gj-code .hljs-property {
+  color: #c9c1b1;
+}
+.gj-code .hljs-variable,
+.gj-code .hljs-params,
+.gj-code .hljs-template-variable {
+  color: #d8d2c4;
+}
+.gj-code .hljs-deletion {
+  color: #ff8a7e;
+}
+
+@keyframes gj-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gj-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gj-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes gj-pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(47, 138, 91, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(47, 138, 91, 0.05);
+  }
+}
+.gj-rise {
+  animation: gj-rise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.gj-pop {
+  animation: gj-pop 0.16s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.gj-fade {
+  animation: gj-fade 0.2s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gj-rise,
+  .gj-pop,
+  .gj-fade {
+    animation-duration: 1ms;
+  }
+  .gj-motion * {
+    transition-duration: 80ms !important;
+  }
+}
+@keyframes gj-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+/* ─── Editor do Journal (Tiptap) — mesma tipografia da leitura ─── */
+.gj-editor .ProseMirror {
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 31px;
+  color: #2c3b4d;
+  padding-bottom: 30vh;
+  letter-spacing: 0;
+}
+.gj-editor .ProseMirror > * {
+  margin: 0;
+}
+.gj-editor .ProseMirror h2 {
+  padding-top: 24px;
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.gj-editor .ProseMirror h3 {
+  padding-top: 12px;
+  font-size: 22px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.gj-editor .ProseMirror h4 {
+  padding-top: 8px;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 600;
+}
+.gj-editor .ProseMirror ul,
+.gj-editor .ProseMirror ol {
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gj-editor .ProseMirror ul {
+  list-style: disc;
+}
+.gj-editor .ProseMirror ol {
+  list-style: decimal;
+}
+.gj-editor .ProseMirror li::marker {
+  color: rgba(163, 81, 57, 0.75);
+}
+.gj-editor .ProseMirror li > p {
+  margin: 0;
+}
+.gj-editor .ProseMirror blockquote {
+  border-left: 2px solid rgba(163, 81, 57, 0.5);
+  padding: 4px 0 4px 20px;
+  font-style: italic;
+  font-size: 19px;
+  line-height: 32px;
+  color: rgba(44, 59, 77, 0.8);
+}
+.gj-editor .ProseMirror a {
+  color: #a35139;
+  text-decoration: underline;
+  text-decoration-color: rgba(163, 81, 57, 0.35);
+  text-underline-offset: 4px;
+  font-weight: 500;
+}
+.gj-editor .ProseMirror :not(pre) > code {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.86em;
+  background: #f9f7f4;
+  color: #a35139;
+  border-radius: 6px;
+  padding: 2px 6px;
+  box-shadow: inset 0 0 0 1px rgba(201, 193, 177, 0.5);
+}
+.gj-editor .ProseMirror mark {
+  background: rgba(255, 177, 98, 0.3);
+  border-radius: 3px;
+  padding: 0 2px;
+  color: inherit;
+}
+.gj-editor .ProseMirror hr {
+  border: 0;
+  height: 24px;
+  position: relative;
+}
+.gj-editor .ProseMirror hr::after {
+  content: "···";
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  letter-spacing: 0.6em;
+  color: #c9c1b1;
+  font-family: var(--font-geist-mono), monospace;
+}
+.gj-editor .ProseMirror hr.ProseMirror-selectednode::after {
+  color: #a35139;
+}
+.gj-editor .ProseMirror table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 24px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(201, 193, 177, 0.6);
+}
+.gj-editor .ProseMirror th,
+.gj-editor .ProseMirror td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(201, 193, 177, 0.4);
+  vertical-align: top;
+  position: relative;
+  min-width: 80px;
+}
+.gj-editor .ProseMirror th {
+  background: #f9f7f4;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+.gj-editor .ProseMirror .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(163, 81, 57, 0.08);
+  pointer-events: none;
+}
+.gj-editor .ProseMirror p.is-empty::before,
+.gj-editor .ProseMirror h2.is-empty::before,
+.gj-editor .ProseMirror h3.is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: rgba(44, 59, 77, 0.32);
+}
+.gj-editor .ProseMirror ::selection {
+  background: rgba(163, 81, 57, 0.18);
+}
+.gj-editor .ProseMirror .ProseMirror-gapcursor::after {
+  border-top-color: #a35139;
+}
+.gj-editor .ProseMirror-selectednode > [data-node-view-wrapper] .gj-select-ring,
+.gj-editor .ProseMirror-selectednode.gj-select-ring {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #a35139;
+}
+.gj-editor [data-node-view-wrapper] {
+  animation: gj-rise 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
