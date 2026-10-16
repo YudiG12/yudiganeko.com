@@ -1,6 +1,7 @@
 import Image from "next/image";
 import CompanyName from "./company-name";
 import ExperienceList from "./experiences";
+import JournalSection from "./journal-section";
 import NameAnimation from "./name-animation";
 import RoadmapEmbed from "./roadmap-embed";
 import TiltImage from "./tilt-image";
@@ -8,6 +9,9 @@ import TiltImage from "./tilt-image";
 // Em dev aponta pro roadmap rodando local (`next dev -p 3001` no repo ganeko-roadmap).
 const ROADMAP_URL =
   process.env.NODE_ENV === "development" ? "http://localhost:3001" : "https://ganeko-roadmap.vercel.app";
+
+// A seção de artigos lê do Supabase; a home é regenerada a cada 5 min (e na hora quando algo é publicado).
+export const revalidate = 300;
 
 const studyResources = [
   {
@@ -124,6 +128,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <JournalSection />
         <section id="roadmap" className="mt-16 lg:mt-0 mb-20 scroll-mt-10 text-center">
           <h2 className="font-bold text-2xl text-blue-fantastic">Meu roadmap de estudos</h2>
           <p className="mt-2 mb-8 text-sm sm:text-base text-blue-fantastic/70">

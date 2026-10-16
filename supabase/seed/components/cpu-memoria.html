@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600;700&family=Geist:wght@400;600&display=swap');
+  :root { --ink:#2c3b4d; --on:#e8892b; --muted:rgba(44,59,77,.55); }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Geist Mono',ui-monospace,monospace; color:var(--ink); }
+  .steps { display:flex; gap:4px; padding:14px 14px 0; }
+  .step { flex:1; display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; border:0; background:none; cursor:pointer; font:inherit; font-size:12px; color:var(--muted); text-align:left; transition:all .2s ease-out; }
+  .step:hover { background:rgba(255,255,255,.7); }
+  .step .n { width:20px; height:20px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; box-shadow:inset 0 0 0 1.5px #c9c1b1; transition:all .2s; }
+  .step.done { color:rgba(44,59,77,.75); } .step.done .n { background:var(--ink); color:#fff; box-shadow:none; }
+  .step.now { background:#fff; color:var(--ink); font-weight:600; box-shadow:inset 0 0 0 1.5px var(--on),0 6px 14px -8px rgba(232,137,43,.5); }
+  .step.now .n { background:var(--on); color:#fff; box-shadow:none; font-weight:700; }
+  .diagram { display:flex; align-items:center; justify-content:center; padding:36px 28px 22px; }
+  .cpu { width:200px; padding:16px; border-radius:16px; background:var(--ink); display:flex; flex-direction:column; gap:10px; box-shadow:0 12px 24px -12px rgba(44,59,77,.6); flex-shrink:0; }
+  .cpu .t { font-size:11px; letter-spacing:.08em; color:rgba(255,255,255,.6); }
+  .reg { display:flex; justify-content:space-between; padding:8px 10px; border-radius:8px; background:rgba(255,255,255,.08); font-size:12px; color:rgba(255,255,255,.7); transition:box-shadow .25s; }
+  .reg b { color:#fff; font-weight:400; transition:color .2s; } .reg.wait { box-shadow:inset 0 0 0 1px rgba(255,177,98,.6); } .reg.wait b { color:#ffb162; }
+  .reg.got { box-shadow:inset 0 0 0 1.5px var(--on); } .reg.got b { color:#ffb162; font-weight:700; }
+  .buses { position:relative; display:flex; flex-direction:column; gap:28px; width:220px; flex-shrink:1; }
+  .bus { display:flex; flex-direction:column; gap:6px; } .bus .l { font-size:10px; letter-spacing:.06em; text-align:center; color:var(--muted); transition:color .2s; }
+  .bus .w { height:2px; background:#c9c1b1; border-radius:2px; transition:all .25s; }
+  .bus.on .l { color:var(--on); } .bus.on .w { height:3px; background:var(--on); box-shadow:0 0 0 4px rgba(232,137,43,.15); }
+  .packet { position:absolute; width:44px; height:26px; border-radius:7px; background:var(--on); color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 14px -4px rgba(232,137,43,.7); opacity:0; transition:transform .55s cubic-bezier(.65,0,.35,1), opacity .2s; }
+  .mem { width:220px; border-radius:14px; background:#fff; box-shadow:inset 0 0 0 1px rgba(201,193,177,.8); overflow:hidden; flex-shrink:0; }
+  .mem .h { display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px solid rgba(201,193,177,.5); font-size:10px; letter-spacing:.06em; color:var(--muted); }
+  .cell { display:flex; justify-content:space-between; padding:7px 14px; font-size:12px; transition:background .25s, box-shadow .25s; }
+  .cell span:first-child { color:rgba(44,59,77,.45); }
+  .cell.hit { background:#fff1e0; box-shadow:inset 3px 0 0 var(--on); } .cell.hit span:first-child { color:var(--ink); font-weight:600; } .cell.hit span:last-child { color:var(--on); font-weight:700; }
+  .cell.seek { background:#f9f7f4; }
+  .foot { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px 18px; }
+  .foot p { margin:0; font-family:'Geist',system-ui; font-size:15px; line-height:22px; }
+  .nav { display:flex; gap:6px; flex-shrink:0; }
+  .nav button { width:32px; height:32px; border-radius:999px; border:0; cursor:pointer; display:flex; align-items:center; justify-content:center; background:#fff; box-shadow:inset 0 0 0 1px rgba(201,193,177,.9); transition:transform .12s; }
+  .nav button.next { background:var(--ink); box-shadow:none; } .nav button:active { transform:scale(.92); } .nav button:disabled { opacity:.35; cursor:default; }
+  @media (max-width:720px) { .steps { flex-wrap:wrap } .step { flex:1 1 45% } .diagram { flex-direction:column; gap:18px } .buses { width:200px; transform:rotate(90deg); height:60px; margin:50px 0 } .cpu, .mem { width:100% ; max-width:260px } }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration:1ms !important } }
+</style>
+</head>
+<body>
+<div class="steps" id="steps"></div>
+<div class="diagram">
+  <div class="cpu"><span class="t">CPU</span><div class="reg"><span>R1</span><b>17</b></div><div class="reg" id="r2"><span>R2</span><b id="r2v">—</b></div></div>
+  <div class="buses" id="buses">
+    <div class="bus" id="busA"><span class="l">ENDEREÇO →</span><div class="w"></div></div>
+    <div class="bus" id="busD"><span class="l">← DADO</span><div class="w"></div></div>
+    <div class="packet" id="pkt">0x12</div>
+  </div>
+  <div class="mem"><div class="h"><span>MEMÓRIA</span><span>RAM</span></div><div id="cells"></div></div>
+</div>
+<div class="foot"><p id="desc" aria-live="polite"></p><div class="nav"><button id="prev" aria-label="Etapa anterior"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C3B4D" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg></button><button id="next" class="next" aria-label="Próxima etapa"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button></div></div>
+<script>
+  const MEM = [['0x10', 17], ['0x11', 8], ['0x12', 42], ['0x13', 0], ['0x14', 255]];
+  const STEPS = [
+    { t: 'Pede o endereço', d: 'A CPU precisa do valor de R2 e manda o endereço <b>0x12</b> pelo barramento de endereço.' },
+    { t: 'Memória encontra', d: 'A memória localiza a célula <b>0x12</b>. Ler a RAM leva centenas de ciclos: por isso existem caches.' },
+    { t: 'Dado volta', d: 'O valor <b>42</b>, guardado no endereço 0x12, viaja de volta pelo barramento de dados.' },
+    { t: 'Vai pro registrador', d: 'O 42 chega em <b>R2</b>. Agora a CPU tem os dois valores e pode somar.' },
+  ];
+  const $ = (id) => document.getElementById(id);
+  $('cells').innerHTML = MEM.map(([a, v], i) => `<div class="cell" data-i="${i}"><span>${a}</span><span>${v}</span></div>`).join('');
+  $('steps').innerHTML = STEPS.map((s, i) => `<button class="step" data-i="${i}"><span class="n">${i + 1}</span>${s.t}</button>`).join('');
+  let cur = 0;
+  function go(i) {
+    cur = Math.max(0, Math.min(3, i));
+    document.querySelectorAll('.step').forEach((b, k) => { b.classList.toggle('done', k < cur); b.classList.toggle('now', k === cur); b.querySelector('.n').textContent = k < cur ? '✓' : k + 1; });
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((c) => c.classList.remove('hit', 'seek'));
+    if (cur === 1) cells.forEach((c, k) => k <= 2 && c.classList.add(k === 2 ? 'hit' : 'seek'));
+    if (cur >= 2) cells[2].classList.add('hit');
+    $('busA').classList.toggle('on', cur === 0);
+    $('busD').classList.toggle('on', cur === 2);
+    const pkt = $('pkt'), w = $('buses').offsetWidth;
+    pkt.textContent = cur === 0 ? '0x12' : '42';
+    pkt.style.top = cur === 0 ? '-6px' : '34px';
+    pkt.style.opacity = cur === 0 || cur === 2 ? 1 : 0;
+    pkt.style.transform = `translateX(${cur === 0 ? w - 44 : 0}px)`;
+    $('r2').className = 'reg' + (cur === 3 ? ' got' : ' wait');
+    $('r2v').textContent = cur === 3 ? '42' : 'aguardando…';
+    $('desc').innerHTML = STEPS[cur].d;
+    $('prev').disabled = cur === 0; $('next').disabled = cur === 3;
+  }
+  // Ao entrar numa etapa, o pacote parte do lado certo e anima até o destino.
+  const pkt = $('pkt');
+  function enter(i) {
+    if (i === 0 || i === 2) { pkt.style.transition = 'none'; pkt.style.transform = `translateX(${i === 0 ? 0 : $('buses').offsetWidth - 44}px)`; pkt.offsetWidth; pkt.style.transition = ''; }
+    requestAnimationFrame(() => go(i));
+  }
+  $('steps').addEventListener('click', (e) => { const b = e.target.closest('.step'); if (b) enter(+b.dataset.i); });
+  $('prev').addEventListener('click', () => enter(cur - 1));
+  $('next').addEventListener('click', () => enter(cur + 1));
+  addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') enter(cur + 1); if (e.key === 'ArrowLeft') enter(cur - 1); });
+  enter(0);
+</script>
+</body>
+</html>
