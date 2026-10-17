@@ -47,8 +47,16 @@ export default function Reactions({
     } catch {}
   }
 
-  const top = [...mine].pop();
   const total = Object.values(counts).reduce((a, b) => a + (b ?? 0), 0);
+  // As contagens são por emoji (não por pessoa): descontar as minhas dá as reações dos outros.
+  const others = Math.max(0, total - mine.length);
+  const note = !mine.length
+    ? ""
+    : others > 0
+      ? `+ ${others} ${others === 1 ? "reação" : "reações"} de outros leitores`
+      : mine.length === 1
+        ? "obrigado pela reação"
+        : "obrigado pelas reações";
 
   return (
     <section aria-label="Reações" className="flex flex-col items-center gap-4 border-b border-oatmeal/50 py-14">
@@ -85,7 +93,7 @@ export default function Reactions({
         })}
       </div>
       <span className="h-4 font-mono text-xs text-blue-fantastic/50">
-        {top && total > 1 ? `você e mais ${total - 1} reagiram` : top ? "obrigado pela reação" : ""}
+        {note}
       </span>
     </section>
   );
