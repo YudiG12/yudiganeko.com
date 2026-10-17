@@ -21,14 +21,19 @@ const CSP = [
   "base-uri 'none'",
 ].join("; ");
 
-export function buildSrcDoc(html: string, frameId: string) {
+export function buildSrcDoc(html: string, frameId: string, autoHeight = true) {
   // Tudo numa linha só: assim o número da linha dos erros bate com o código colado.
   const head =
     `<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${CSP}">` +
     `<meta name="viewport" content="width=device-width,initial-scale=1">` +
-    `<style>html,body{margin:0;background:transparent}body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#2c3b4d;-webkit-font-smoothing:antialiased}</style>` +
+    // Altura automática: o iframe acompanha o conteúdo, então nunca deve rolar por dentro — senão a
+    // barra aparece por um instante, estreita o conteúdo e muda as quebras de linha/espaçamentos.
+    // flow-root faz a altura medida do body incluir as margens dos filhos.
+    `<style>html,body{margin:0;background:transparent}${
+      autoHeight ? "html,body{overflow:hidden!important}" : "html{scrollbar-gutter:stable}"
+    }body{display:flow-root;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#2c3b4d;-webkit-font-smoothing:antialiased}</style>` +
     `<script>(function(){var id=${JSON.stringify(frameId)};function post(m){m.__gj=id;parent.postMessage(m,"*")}` +
-    `var last=0;function h(){var b=document.body;if(!b)return;var v=Math.ceil(b.getBoundingClientRect().height);if(v!==last){last=v;post({type:"height",value:v})}}` +
+    `var last=0;function h(){var b=document.body;if(!b)return;var v=Math.ceil(Math.max(b.getBoundingClientRect().height,b.scrollHeight));if(v!==last){last=v;post({type:"height",value:v})}}` +
     `window.addEventListener("load",h);if(window.ResizeObserver){document.addEventListener("DOMContentLoaded",function(){new ResizeObserver(h).observe(document.body)})}` +
     `setTimeout(h,60);window.addEventListener("error",function(e){post({type:"error",message:String(e.message||e),line:e.lineno||0})});` +
     `post({type:"ready"})})();</script>`;
@@ -68,7 +73,8 @@ export default function InteractiveFrame({
   // (no HTML do servidor o load poderia acontecer antes da hidratação e a altura se perderia).
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const srcDoc = useMemo(() => buildSrcDoc(html, frameId), [html, frameId]);
+  const autoHeight = height === "auto";
+  const srcDoc = useMemo(() => buildSrcDoc(html, frameId, autoHeight), [html, frameId, autoHeight]);
 
   useEffect(() => {
     function onMessage(e: MessageEvent) {
@@ -101,6 +107,7 @@ export default function InteractiveFrame({
       sandbox="allow-scripts"
       referrerPolicy="no-referrer"
       loading="lazy"
+      scrolling={autoHeight ? "no" : undefined}
       onLoad={() => setLoaded(true)}
       style={{ height: h }}
       className={`block w-full border-0 bg-transparent transition-[height,opacity] duration-300 ease-[cubic-bezier(.22,1,.36,1)] ${
