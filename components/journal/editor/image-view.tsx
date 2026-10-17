@@ -1,22 +1,58 @@
 "use client";
 
 import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Segmented, Toggle } from "../admin/ui";
 import { widthClass } from "@/lib/journal/layout";
 import { useEditorCtx } from "./context";
 import { pickImage, uploadImage } from "./upload";
 
+const MIN_SIZE = 160;
+const MAX_SIZE = 1200;
+
 export default function ImageView({ node, updateAttributes, selected, deleteNode }: NodeViewProps) {
   const ctx = useEditorCtx();
   const [busy, setBusy] = useState(false);
-  const { src, caption, rounded, width, alt } = node.attrs as {
+  const frameRef = useRef<HTMLDivElement>(null);
+  // Largura ao vivo durante o arraste; só vira atributo (e entra no histórico) ao soltar.
+  const [dragSize, setDragSize] = useState<number | null>(null);
+  const { src, caption, rounded, width, alt, size } = node.attrs as {
     src: string;
     caption: string;
     rounded: boolean;
     width: "column" | "wide" | "full";
     alt: string;
+    size: number | null;
   };
+  const shownSize = dragSize ?? size;
+
+  function startResize(e: React.PointerEvent<HTMLSpanElement>, side: 1 | -1) {
+    const frame = frameRef.current;
+    if (!frame) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const handle = e.currentTarget;
+    handle.setPointerCapture(e.pointerId);
+    const startX = e.clientX;
+    const startW = frame.getBoundingClientRect().width;
+    const max = Math.min(MAX_SIZE, window.innerWidth - 32);
+    let next = startW;
+    // A imagem é centralizada, então cada px da alça vale 2px de largura.
+    const onMove = (ev: PointerEvent) => {
+      next = Math.round(Math.min(max, Math.max(MIN_SIZE, startW + (ev.clientX - startX) * 2 * side)));
+      setDragSize(next);
+    };
+    const onUp = () => {
+      handle.removeEventListener("pointermove", onMove);
+      handle.removeEventListener("pointerup", onUp);
+      handle.removeEventListener("pointercancel", onUp);
+      setDragSize(null);
+      if (next !== startW) updateAttributes({ size: next });
+    };
+    handle.addEventListener("pointermove", onMove);
+    handle.addEventListener("pointerup", onUp);
+    handle.addEventListener("pointercancel", onUp);
+  }
 
   async function replace() {
     const file = await pickImage();
@@ -40,7 +76,7 @@ export default function ImageView({ node, updateAttributes, selected, deleteNode
       >
         <Segmented
           value={width ?? "column"}
-          onChange={(v) => updateAttributes({ width: v })}
+          onChange={(v) => updateAttributes({ width: v, size: null })}
           options={[
             { value: "column", label: "coluna" },
             { value: "wide", label: "larga" },
@@ -64,15 +100,44 @@ export default function ImageView({ node, updateAttributes, selected, deleteNode
           </svg>
         </button>
       </div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt ?? ""}
-        draggable={false}
-        className={`${widthClass[width ?? "column"]} h-auto transition-[max-width,border-radius,box-shadow,opacity] duration-300 ease-[cubic-bezier(.34,1.56,.64,1)] ${
-          rounded !== false ? "rounded-2xl" : "rounded-none"
-        } ${selected ? "shadow-[0_0_0_2px_#fff,0_0_0_4px_#a35139]" : ""} ${busy ? "opacity-50" : ""}`}
-      />
+      <div
+        ref={frameRef}
+        style={shownSize ? { maxWidth: shownSize } : undefined}
+        className={`group/img relative ${widthClass[width ?? "column"]} ${
+          dragSize ? "" : "transition-[max-width] duration-300 ease-[cubic-bezier(.34,1.56,.64,1)]"
+        }`}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={alt ?? ""}
+          draggable={false}
+          className={`block h-auto w-full transition-[border-radius,box-shadow,opacity] duration-300 ease-[cubic-bezier(.34,1.56,.64,1)] ${
+            rounded !== false ? "rounded-2xl" : "rounded-none"
+          } ${selected || dragSize ? "shadow-[0_0_0_2px_#fff,0_0_0_4px_#a35139]" : ""} ${busy ? "opacity-50" : ""}`}
+        />
+        {([-1, 1] as const).map((side) => (
+          <span
+            key={side}
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Redimensionar imagem"
+            title="Arraste para redimensionar · duplo clique volta ao preset"
+            onPointerDown={(e) => startResize(e, side)}
+            onDoubleClick={() => updateAttributes({ size: null })}
+            className={`absolute top-1/2 z-10 flex h-16 w-4 -translate-y-1/2 cursor-ew-resize touch-none items-center justify-center transition-opacity duration-200 ${
+              side === -1 ? "-left-2" : "-right-2"
+            } ${selected || dragSize ? "opacity-100" : "opacity-0 group-hover/img:opacity-100"}`}
+          >
+            <span className="h-12 w-1.5 rounded-full bg-white shadow-[0_0_0_1px_rgba(44,59,77,0.25),0_4px_10px_-2px_rgba(44,59,77,0.35)]" />
+          </span>
+        ))}
+        {dragSize && (
+          <span className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-md bg-blue-fantastic/85 px-2 py-1 font-mono text-[11px] text-white">
+            {dragSize}px
+          </span>
+        )}
+      </div>
       <input
         value={caption ?? ""}
         onChange={(e) => updateAttributes({ caption: e.target.value.slice(0, 300) })}

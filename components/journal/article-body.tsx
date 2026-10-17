@@ -157,6 +157,7 @@ function Block({ node, k, ids }: { node: JSONContent; k: string; ids: Map<JSONCo
       const width = (node.attrs?.width as keyof typeof widthClass) ?? "column";
       const rounded = node.attrs?.rounded !== false;
       const caption = String(node.attrs?.caption ?? "").trim();
+      const size = Number(node.attrs?.size) || null;
       return (
         <figure className="gj-breakout flex flex-col items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -165,6 +166,7 @@ function Block({ node, k, ids }: { node: JSONContent; k: string; ids: Map<JSONCo
             alt={String(node.attrs?.alt ?? caption ?? "")}
             loading="lazy"
             decoding="async"
+            style={size ? { maxWidth: size } : undefined}
             className={`${widthClass[width] ?? widthClass.column} h-auto ${rounded ? "rounded-2xl" : "rounded-none"}`}
           />
           {caption && (

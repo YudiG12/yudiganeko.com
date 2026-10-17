@@ -26,6 +26,8 @@ export const ImageBlock = Image.extend({
       caption: { default: "" },
       rounded: { default: true },
       width: { default: "column" },
+      // Largura livre em px (arrastando as alças); null = usa o preset de `width`.
+      size: { default: null },
     };
   },
   addNodeView() {
