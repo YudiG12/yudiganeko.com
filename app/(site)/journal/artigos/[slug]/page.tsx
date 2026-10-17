@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ArticleBody from "@/components/journal/article-body";
 import ArticleCard from "@/components/journal/article-card";
+import Comments from "@/components/journal/comments";
 import Reactions from "@/components/journal/reactions";
 import ReadingProgress from "@/components/journal/reading-progress";
 import { TocCompact, TocSidebar } from "@/components/journal/toc";
@@ -156,6 +157,8 @@ export default async function ArticlePage({ params }: Props) {
             <ArticleBody doc={article.content} />
 
             {article.allow_reactions && <div className="mt-16"><Reactions articleId={article.id} initial={reactions} /></div>}
+
+            <Comments articleId={article.id} />
 
             <footer className="flex flex-col gap-10 pt-14">
               {next && (

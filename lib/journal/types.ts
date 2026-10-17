@@ -53,3 +53,16 @@ export type InteractiveComponent = {
 
 export const REACTIONS = ["🤯", "🔥", "👏", "❤️", "🤔"] as const;
 export type ReactionEmoji = (typeof REACTIONS)[number];
+
+export const COMMENT_REACTIONS = ["👍", "😂", "🤯", "❤️", "🔥", "👏"] as const;
+export type CommentReactionEmoji = (typeof COMMENT_REACTIONS)[number];
+
+export type JournalComment = {
+  id: string;
+  parent_id: string | null;
+  author_name: string;
+  is_author: boolean;
+  body: string;
+  created_at: string;
+  reactions: Partial<Record<CommentReactionEmoji, number>>;
+};

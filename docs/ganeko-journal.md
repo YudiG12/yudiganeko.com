@@ -38,6 +38,10 @@ Segurança (mesmo modelo do `ganeko_roadmap`):
   o banco guarda só o SHA-256 dele. O servidor do Next só chama essas funções depois de validar o cookie do admin.
 - Upload: o servidor libera um caminho por 10 min (ticket); o navegador sobe direto para esse caminho. Sem ticket, o Storage recusa.
 - Rascunhos vazios há mais de 1 h são apagados quando a lista do admin abre.
+- Comentários (`ganeko_journal_comments`, `ganeko_journal_comment_reactions`): o leitor só informa o nome (salvo no
+  navegador); respostas de um nível. Escrita só pelo servidor (`/api/journal/comments`, com o token), que manda o hash do
+  IP para o limite de frequência (1 a cada 15 s, 8 a cada 10 min) — o hash nunca é lido pela API. Logado no admin, você
+  comenta como autor (foto + selo) e vê "apagar". O nome "Yudi Ganeko" é reservado.
 
 ## Componentes interativos
 

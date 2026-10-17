@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { getSupabase, journalConfigured } from "./supabase";
-import type { Article, ArticleSummary, Category, ReactionEmoji } from "./types";
+import type { Article, ArticleSummary, Category, CommentReactionEmoji, JournalComment, ReactionEmoji } from "./types";
 
 const SUMMARY =
   "id, slug, title, description, category_id, status, cover_url, reading_minutes, published_at, updated_at";
@@ -77,6 +77,34 @@ export async function getReactions(articleId: string) {
   const out: Partial<Record<ReactionEmoji, number>> = {};
   for (const r of data ?? []) out[r.emoji as ReactionEmoji] = r.count;
   return out;
+}
+
+/** Comentários de um artigo publicado (o RLS esconde os de rascunhos), já com as reações. */
+export async function getComments(articleId: string): Promise<JournalComment[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("ganeko_journal_comments")
+    .select("id, parent_id, author_name, is_author, body, created_at")
+    .eq("article_id", articleId)
+    .order("created_at", { ascending: true })
+    .limit(1000);
+  if (error) throw error;
+  const rows = data ?? [];
+  const reactions = new Map<string, Partial<Record<CommentReactionEmoji, number>>>();
+  for (let i = 0; i < rows.length; i += 200) {
+    const ids = rows.slice(i, i + 200).map((r) => r.id);
+    const { data: rs } = await sb
+      .from("ganeko_journal_comment_reactions")
+      .select("comment_id, emoji, count")
+      .in("comment_id", ids)
+      .gt("count", 0);
+    for (const r of rs ?? []) {
+      const m = reactions.get(r.comment_id) ?? {};
+      m[r.emoji as CommentReactionEmoji] = r.count;
+      reactions.set(r.comment_id, m);
+    }
+  }
+  return rows.map((r) => ({ ...r, reactions: reactions.get(r.id) ?? {} }));
 }
 
 /** Busca por título, descrição e conteúdo (tsvector em português + prefixo no título). */

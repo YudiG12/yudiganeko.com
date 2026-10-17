@@ -34,6 +34,7 @@ export const adminApi = {
       p_id: id,
       p_status: status,
     }),
+  deleteComment: (id: string) => rpc<null>("ganeko_journal_admin_delete_comment", { p_id: id }),
   deleteArticle: (id: string) => rpc<null>("ganeko_journal_admin_delete_article", { p_id: id }),
   cleanupEmptyDrafts: () => rpc<number>("ganeko_journal_admin_cleanup_empty"),
   listComponents: () => rpc<InteractiveComponent[]>("ganeko_journal_admin_list_components"),
