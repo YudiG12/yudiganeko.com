@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useTransition } from "react";
-import { deleteArticleAction, deleteCategoryAction, saveCategoryAction, setStatusAction } from "@/app/admin/actions";
+import { useMemo, useRef, useState, useTransition } from "react";
+import { createArticleAction, deleteArticleAction, deleteCategoryAction, saveCategoryAction, setStatusAction } from "@/app/admin/actions";
+import { uploadImage } from "@/components/journal/editor/upload";
 import { formatDate } from "@/lib/journal/content";
+import { importArticle } from "@/lib/journal/import-article";
 import { articleUrl } from "@/lib/journal/site";
 import type { AdminArticleRow, Category } from "@/lib/journal/types";
 import { Dialog, Toast, inputCls } from "./ui";
@@ -26,6 +28,8 @@ export default function ArticlesAdmin({ articles, categories }: { articles: Admi
   const [menu, setMenu] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; tone?: "ok" | "error" } | null>(null);
   const [catsOpen, setCatsOpen] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const importInput = useRef<HTMLInputElement>(null);
   const [pending, start] = useTransition();
   const counts = useMemo(
     () => ({
@@ -48,6 +52,20 @@ export default function ArticlesAdmin({ articles, categories }: { articles: Admi
       router.refresh();
     });
 
+  // Sobe as imagens primeiro e só então cria o artigo: se algo falhar, nenhum rascunho fica pela metade.
+  async function importFile(file: File) {
+    setImporting(true);
+    try {
+      const a = await importArticle(file, (img) => uploadImage(img, null));
+      const r = await createArticleAction({ title: a.title, description: a.description, content: a.content, cover_url: a.coverUrl });
+      if (!r.ok) throw new Error(r.error);
+      router.push(`/admin/artigos/${r.data.id}`);
+    } catch (e) {
+      setImporting(false);
+      setToast({ message: e instanceof Error ? e.message : "Não foi possível importar.", tone: "error" });
+    }
+  }
+
   return (
     <main className="mx-auto w-full max-w-[960px] px-4 pb-24 pt-14">
       <div className="gj-rise flex items-end justify-between gap-4">
@@ -62,6 +80,33 @@ export default function ArticlesAdmin({ articles, categories }: { articles: Admi
             className="hidden h-10 items-center rounded-[10px] px-3.5 text-[13px] ring-1 ring-oatmeal/80 transition hover:bg-palladian active:scale-[0.98] sm:flex"
           >
             Categorias
+          </button>
+          <input
+            ref={importInput}
+            type="file"
+            accept=".zip,.html,.htm,application/zip,text/html"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              e.target.value = "";
+              if (f) importFile(f);
+            }}
+          />
+          <button
+            type="button"
+            disabled={importing}
+            onClick={() => importInput.current?.click()}
+            title="Importar um artigo de um .zip (HTML + imagens) ou .html"
+            className="flex h-10 items-center gap-2 rounded-[10px] px-3.5 text-[13px] ring-1 ring-oatmeal/80 transition hover:bg-palladian active:scale-[0.98] disabled:opacity-60"
+          >
+            {importing ? (
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-oatmeal border-t-truffle-trouble" />
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+              </svg>
+            )}
+            {importing ? "Importando…" : "Importar"}
           </button>
           <Link
             href="/admin/artigos/novo"

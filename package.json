@@ -26,6 +26,7 @@
     "@tiptap/react": "^3.32.0",
     "@tiptap/starter-kit": "^3.32.0",
     "@uiw/react-codemirror": "^4.25.12",
+    "fflate": "^0.8.3",
     "hast-util-to-html": "^9.0.5",
     "lowlight": "^3.3.0",
     "mermaid": "^12.2.0",
